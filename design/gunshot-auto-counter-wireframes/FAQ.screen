@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore" xmlns:o="http://wireframesketcher.com/1.0/model/overrides">
+  <widgets xsi:type="model:Master" id="1" x="32" y="33" measuredWidth="456" measuredHeight="872">
+    <screen xsi:type="model:WidgetGroup" href="assets/Android5/Devices/Nexus%206.screen#Nexus%206"/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="2" x="55" y="135" measuredWidth="408" measuredHeight="50">
+    <widgets xsi:type="model:Master" id="3" width="408" measuredWidth="408" measuredHeight="50">
+      <screen xsi:type="model:WidgetGroup" href="assets/Android5/Navigation.screen#App%20Bar"/>
+      <overrides>
+        <widgetChanges xsi:type="o:Delete" ref="6"/>
+        <widgetChanges xsi:type="o:Delete" ref="3"/>
+        <widgets ref="2" width="408" height="50"/>
+        <widgets ref="4" y="13">
+          <attributes key="icon" value="assets/ic-keyboard-backspace (medium)"/>
+        </widgets>
+        <widgets ref="5" y="9" text="Frequently Asked Questions"/>
+      </overrides>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:Image" id="4" x="161" y="166" width="197" height="201" measuredWidth="197" measuredHeight="201" src="assets/WolfBroLogo_stroke_500x500.png"/>
+  <widgets xsi:type="model:Label" id="5" x="96" y="386" text="Will you ever support iOS?" measuredWidth="152" measuredHeight="23">
+    <font bold="true"/>
+  </widgets>
+  <widgets xsi:type="model:Text" id="6" x="96" y="408" width="320" height="81" text="I would be happy to. I just need someone to donate a new iPhone, a new MacBook and $99 a year for the Apple Developer Program membership.&#xD;&#xA;&#xD;&#xA;In other words, no I won't.&#xD;&#xA;" measuredWidth="320" measuredHeight="81">
+    <font/>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font size="12px"/>
+</model:Screen>

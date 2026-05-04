@@ -1,5 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model:Screen xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore" xmlns:o="http://wireframesketcher.com/1.0/model/overrides">
+  <widgets xsi:type="model:Master" id="10" x="48" y="40" measuredWidth="456" measuredHeight="872">
+    <screen xsi:type="model:WidgetGroup" href="assets/Android5/Devices/Nexus%206.screen#Nexus%206"/>
+  </widgets>
+  <widgets xsi:type="model:Shape" id="11" x="392" y="718" width="64" height="64" text="+" measuredWidth="64" measuredHeight="64">
+    <font size="72px"/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="12" x="69" y="318" measuredWidth="410" measuredHeight="480">
+    <widgets xsi:type="model:Table" id="13" width="410" height="480" text="(align:center).Profile Name, (align:center).Rounds,(align:center). &#xA;(align:left).{image} Sig Sauer P226, 5000,{edit} %(color:CC0000){trash}%&#xA;(align:left).{image} Blazer 9mm 124gr,100,(w:100).{edit} %(color:CC0000){trash}%&#xA;(align:left).{image} Blazer 9mm 115gr,200,{edit} %(color:CC0000){trash}%&#xA;(align:left).{image} Federal Premium 9mm 147gr HST HP,50, {edit} %(color:CC0000){trash}%&#xA;(align:left).{image} Speer Gold Dot 9mm 124gr GDHP,20,{edit} %(color:CC0000){trash}%&#xA;(align:left).{image} Remington Rifled Slug 12ga,30,{edit} %(color:CC0000){trash}%&#xA;(align:left).{image} Federal Buckshot 00 12ga,30,{edit} %(color:CC0000){trash}%&#xA;(align:left).{image} X-TAC Match 5.56x45mm 62gr,400,{edit} %(color:CC0000){trash}%" measuredWidth="410" measuredHeight="480" verticalScrollbar="true" rowHeight="35" horizontalLines="true" header="false">
+      <font size="14px"/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="14" x="383" y="710" measuredWidth="73" measuredHeight="73">
+    <widgets xsi:type="model:Shape" id="15" width="73" height="73" measuredWidth="73" measuredHeight="73" background="#3d85c6">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Icon" id="16" x="16" y="16" width="41" height="41" measuredWidth="41" measuredHeight="41" icon="add (large)"/>
+  </widgets>
+  <widgets xsi:type="model:Icon" id="17" x="71" y="195" measuredWidth="32" measuredHeight="32" icon="filter (large)"/>
+  <widgets xsi:type="model:Combo" id="18" x="288" y="196" text="Select Manufactuer" measuredWidth="160" measuredHeight="29">
+    <font size="16px"/>
+  </widgets>
+  <widgets xsi:type="model:Combo" id="19" x="112" y="230" width="160" text="Select Grain" measuredWidth="160" measuredHeight="29">
+    <font size="16px"/>
+  </widgets>
+  <widgets xsi:type="model:Combo" id="20" x="112" y="196" width="160" text="Select Caliber" measuredWidth="160" measuredHeight="29">
+    <font size="16px"/>
+  </widgets>
+  <widgets xsi:type="model:Icon" id="21" x="347" y="277" measuredWidth="32" measuredHeight="32" icon="desc (large)"/>
+  <widgets xsi:type="model:Combo" id="22" x="113" y="278" width="224" text="Last Updated" measuredWidth="224" measuredHeight="29">
+    <font size="16px"/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="23" x="77" y="278" text="Sort" measuredWidth="37" measuredHeight="29">
+    <font size="16px" bold="true"/>
+  </widgets>
+  <widgets xsi:type="model:HLine" id="24" x="69" y="265" width="410" measuredWidth="410" measuredHeight="6"/>
+  <widgets xsi:type="model:WidgetGroup" id="25" x="69" y="141" measuredWidth="410" measuredHeight="50">
+    <widgets xsi:type="model:Master" id="26" width="410" measuredWidth="410" measuredHeight="50">
+      <screen xsi:type="model:WidgetGroup" href="assets/Android5/Navigation.screen#App%20Bar"/>
+      <overrides>
+        <widgetChanges xsi:type="o:Delete" ref="6"/>
+        <widgetChanges xsi:type="o:Delete" ref="3"/>
+        <widgets ref="2" width="410" height="50"/>
+        <widgets ref="4" y="13"/>
+        <widgets ref="5" y="9" text="Ammo Profiles"/>
+      </overrides>
+    </widgets>
+    <widgets xsi:type="model:Icon" id="27" x="370" y="9" measuredWidth="32" measuredHeight="32" icon="export (large)"/>
+  </widgets>
   <hRuler/>
   <vRuler/>
   <font size="12px"/>

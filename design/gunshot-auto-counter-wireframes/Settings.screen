@@ -1,6 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model:Screen xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
-  <hRuler/>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore" xmlns:o="http://wireframesketcher.com/1.0/model/overrides">
+  <widgets xsi:type="model:Master" id="1" x="56" y="40" measuredWidth="456" measuredHeight="872">
+    <screen xsi:type="model:WidgetGroup" href="assets/Android5/Devices/Nexus%206.screen#Nexus%206"/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="2" x="78" y="142" measuredWidth="409" measuredHeight="50">
+    <widgets xsi:type="model:Master" id="3" width="409" measuredWidth="409" measuredHeight="50">
+      <screen xsi:type="model:WidgetGroup" href="assets/Android5/Navigation.screen#App%20Bar"/>
+      <overrides>
+        <widgetChanges xsi:type="o:Delete" ref="6"/>
+        <widgetChanges xsi:type="o:Delete" ref="3"/>
+        <widgets ref="2" width="409" height="50"/>
+        <widgets ref="4" y="13">
+          <attributes key="icon" value="assets/ic-keyboard-backspace (medium)"/>
+        </widgets>
+        <widgets ref="5" y="9" text="Settings"/>
+      </overrides>
+    </widgets>
+    <widgets xsi:type="model:Icon" id="46" x="367" y="11" measuredWidth="32" measuredHeight="32" icon="save (large)"/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="7" x="87" y="206" text="dB Threshold" measuredWidth="106" measuredHeight="29">
+    <font size="16px" bold="true"/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="9" x="87" y="249" text="Gunshot Flash Color" measuredWidth="158" measuredHeight="29">
+    <font size="16px" bold="true"/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="10" x="88" y="292" text="Save GPS Data" measuredWidth="116" measuredHeight="29">
+    <font size="16px" bold="true"/>
+  </widgets>
+  <widgets xsi:type="model:Icon" id="24" x="191" y="215" width="10" height="11" measuredWidth="10" measuredHeight="11" icon="info (large)"/>
+  <widgets xsi:type="model:HSlider" id="38" x="261" y="212" width="212" measuredWidth="212" measuredHeight="17"/>
+  <widgets xsi:type="model:Label" id="39" x="209" y="204" text="75 dB" measuredWidth="53" measuredHeight="33">
+    <font size="18px"/>
+  </widgets>
+  <widgets xsi:type="model:Switch" id="40" x="219" y="295" text="YES, NO" measuredWidth="68" measuredHeight="23" selected="true" background="#3d85c6">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:ColorPicker" id="42" x="258" y="252" measuredWidth="33" measuredHeight="23"/>
+  <widgets xsi:type="model:Icon" id="43" x="243" y="258" width="10" height="11" measuredWidth="10" measuredHeight="11" icon="info (large)"/>
+  <widgets xsi:type="model:Icon" id="44" x="200" y="301" width="10" height="11" measuredWidth="10" measuredHeight="11" icon="info (large)"/>
+  <hRuler>
+    <guides position="761"/>
+  </hRuler>
   <vRuler/>
   <font size="12px"/>
 </model:Screen>

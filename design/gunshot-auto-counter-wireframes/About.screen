@@ -1,5 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model:Screen xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore" xmlns:o="http://wireframesketcher.com/1.0/model/overrides">
+  <widgets xsi:type="model:Master" id="1" x="32" y="24" locked="true" measuredWidth="456" measuredHeight="872">
+    <screen xsi:type="model:WidgetGroup" href="assets/Android5/Devices/Nexus%206.screen#Nexus%206"/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="2" x="55" y="126" measuredWidth="408" measuredHeight="50">
+    <widgets xsi:type="model:Master" id="3" width="408" measuredWidth="408" measuredHeight="50">
+      <screen xsi:type="model:WidgetGroup" href="assets/Android5/Navigation.screen#App%20Bar"/>
+      <overrides>
+        <widgetChanges xsi:type="o:Delete" ref="6"/>
+        <widgetChanges xsi:type="o:Delete" ref="3"/>
+        <widgets ref="2" width="408" height="50"/>
+        <widgets ref="4" y="13">
+          <attributes key="icon" value="assets/ic-keyboard-backspace (medium)"/>
+        </widgets>
+        <widgets ref="5" y="9" text="About"/>
+      </overrides>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:Image" id="31" x="161" y="157" width="197" height="201" measuredWidth="197" measuredHeight="201" src="assets/WolfBroLogo_stroke_500x500.png"/>
+  <widgets xsi:type="model:Text" id="49" x="186" y="346" text="Developer WolfBro&#xD;&#xA;Version 1.0.0&#xD;&#xA;2026-05-01" measuredWidth="147" measuredHeight="63" textAlignment="Center">
+    <font size="16px" bold="true"/>
+  </widgets>
+  <widgets xsi:type="model:Button" id="36" x="189" y="716" width="138" height="57" text="DONATE" measuredWidth="138" measuredHeight="57" background="#6aa84f">
+    <font size="19px" bold="true"/>
+  </widgets>
+  <widgets xsi:type="model:Text" id="48" x="109" y="418" width="297" height="40" text="I built this app because it was useful for me and I decided to share it." measuredWidth="297" measuredHeight="40">
+    <font size="14px"/>
+  </widgets>
+  <widgets xsi:type="model:Text" id="53" x="124" y="469" width="267" height="81" text="* Ads ruin mobile apps.&#xD;&#xA;* Subscriptions ruin mobile apps.&#xD;&#xA;* Paywalling &quot;Premium Features&quot; ruin mobile apps." measuredWidth="267" measuredHeight="81">
+    <font size="14px"/>
+  </widgets>
+  <widgets xsi:type="model:Text" id="54" x="115" y="561" width="285" text="So here is the full app, free with no ads.&#xD;&#xA;Enjoy!" measuredWidth="285" measuredHeight="40" textAlignment="Center">
+    <font size="14px"/>
+  </widgets>
+  <widgets xsi:type="model:Text" id="55" x="109" y="663" width="297" height="41" text="If you would like to show your appreciation monetarily, please consider donating." measuredWidth="297" measuredHeight="41" textAlignment="Center">
+    <font size="14px"/>
+  </widgets>
+  <widgets xsi:type="model:Text" id="56" x="96" y="612" text="Visit the App's [Github Page] to submit bug reports&#xD;&#xA;and feature requests." measuredWidth="327" measuredHeight="40">
+    <font size="14px"/>
+    <items x="98" y="0" width="80" height="20" text="Github Page"/>
+  </widgets>
   <hRuler/>
   <vRuler/>
   <font size="12px"/>

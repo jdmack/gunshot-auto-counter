@@ -1,5 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model:Screen xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore" xmlns:o="http://wireframesketcher.com/1.0/model/overrides">
+  <widgets xsi:type="model:Master" id="1" x="48" y="40" measuredWidth="456" measuredHeight="872">
+    <screen xsi:type="model:WidgetGroup" href="assets/Android5/Devices/Nexus%206.screen#Nexus%206"/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="2" x="73" y="142" measuredWidth="409" measuredHeight="50">
+    <widgets xsi:type="model:Master" id="3" width="409" measuredWidth="409" measuredHeight="50">
+      <screen xsi:type="model:WidgetGroup" href="assets/Android5/Navigation.screen#App%20Bar"/>
+      <overrides>
+        <widgetChanges xsi:type="o:Delete" ref="6"/>
+        <widgetChanges xsi:type="o:Delete" ref="3"/>
+        <widgets ref="2" width="409" height="50"/>
+        <widgets ref="4" y="13">
+          <attributes key="icon" value="assets/ic-keyboard-backspace (medium)"/>
+        </widgets>
+        <widgets ref="5" y="9" text="Export"/>
+      </overrides>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:Tree" id="13" x="69" y="256" width="410" height="464" text="[+] {checked} Sessions&#xA;-[x] 2026-04-27 - Savage 110 Tactical - .308 - 15 rds&#xA;-[x] 2026-04-27 - P226 - 9mm - 30 rds&#xA;-[x] 2026-04-27 - P239 - 9mm - 14 rds&#xA;-[x] 2026-04-27 - AR-15 Rifle - 5.56x45mm - 60 rds&#xA;-[x] 2026-04-27 - AR-15 Pistol - 5.56x45mm - 40 rds&#xA;[+] {checked} Firearm Profiles&#xA;-[x] Savage 110 Tactical&#xA;-[x] Sig Sauer P226&#xA;-[x] Sig Sauer P239&#xA;-[x] AR-15 Rifle&#xA;-[x] AR-15 Pistol&#xA;[+] {checked} Ammo Profiles&#xA;-[x] Blazer 9mm 124gr&#xA;-[x] Blazer 9mm 115gr&#xA;-[x] Federal Premium 9mm 147gr HST HP&#xA;-[x] Speer Gold Dot 9mm 124gr GDHP&#xA;-[x] Remington Rifled Slug 12ga&#xA;-[x] Federal Buckshot 00 12ga&#xA;-[x] X-TAC Match 5.56x45mm 62gr" measuredWidth="410" measuredHeight="464" verticalScrollbar="true">
+    <items x="0" y="5" width="393" height="21" text="[+] {checked} Sessions"/>
+    <items x="0" y="26" width="393" height="21" text="-[x] 2026-04-27 - Savage 110 Tactical - .308 - 15 rds"/>
+    <items x="0" y="47" width="393" height="21" text="-[x] 2026-04-27 - P226 - 9mm - 30 rds"/>
+    <items x="0" y="68" width="393" height="21" text="-[x] 2026-04-27 - P239 - 9mm - 14 rds"/>
+    <items x="0" y="89" width="393" height="21" text="-[x] 2026-04-27 - AR-15 Rifle - 5.56x45mm - 60 rds"/>
+    <items x="0" y="110" width="393" height="21" text="-[x] 2026-04-27 - AR-15 Pistol - 5.56x45mm - 40 rds"/>
+    <items x="0" y="131" width="393" height="21" text="[+] {checked} Firearm Profiles"/>
+    <items x="0" y="152" width="393" height="21" text="-[x] Savage 110 Tactical"/>
+    <items x="0" y="173" width="393" height="21" text="-[x] Sig Sauer P226"/>
+    <items x="0" y="194" width="393" height="21" text="-[x] Sig Sauer P239"/>
+    <items x="0" y="215" width="393" height="21" text="-[x] AR-15 Rifle"/>
+    <items x="0" y="236" width="393" height="21" text="-[x] AR-15 Pistol"/>
+    <items x="0" y="257" width="393" height="21" text="[+] {checked} Ammo Profiles"/>
+    <items x="0" y="278" width="393" height="21" text="-[x] Blazer 9mm 124gr"/>
+    <items x="0" y="299" width="393" height="21" text="-[x] Blazer 9mm 115gr"/>
+    <items x="0" y="320" width="393" height="21" text="-[x] Federal Premium 9mm 147gr HST HP"/>
+    <items x="0" y="341" width="393" height="21" text="-[x] Speer Gold Dot 9mm 124gr GDHP"/>
+    <items x="0" y="362" width="393" height="21" text="-[x] Remington Rifled Slug 12ga"/>
+    <items x="0" y="383" width="393" height="21" text="-[x] Federal Buckshot 00 12ga"/>
+    <items x="0" y="404" width="393" height="21" text="-[x] X-TAC Match 5.56x45mm 62gr"/>
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="15" x="99" y="226" text="Select All Items" measuredWidth="86" measuredHeight="23">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Icon" id="16" x="79" y="229" width="18" height="18" measuredWidth="18" measuredHeight="18" icon="checked (custom)"/>
+  <widgets xsi:type="model:Label" id="17" x="79" y="200" text="Export Format" measuredWidth="81" measuredHeight="23">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:RadioButton" id="19" x="163" y="200" text="JSON" measuredWidth="48" measuredHeight="23" selected="true">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:RadioButton" id="20" x="220" y="200" text="CSV" measuredWidth="41" measuredHeight="23">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:RadioButton" id="21" x="271" y="200" text="XML" measuredWidth="44" measuredHeight="23">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Button" id="22" x="85" y="736" text="Export to File" measuredWidth="136" measuredHeight="38">
+    <font size="20px"/>
+  </widgets>
+  <widgets xsi:type="model:Button" id="23" x="271" y="736" text="Export to Clipboard" measuredWidth="193" measuredHeight="38">
+    <font size="20px"/>
+  </widgets>
+  <widgets xsi:type="model:Icon" id="24" x="437" y="151" measuredWidth="32" measuredHeight="32" icon="share (large)"/>
   <hRuler/>
   <vRuler/>
   <font size="12px"/>

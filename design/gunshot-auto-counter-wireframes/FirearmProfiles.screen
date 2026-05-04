@@ -1,12 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore" xmlns:o="http://wireframesketcher.com/1.0/model/overrides">
-  <widgets xsi:type="model:Master" id="1" x="200" y="10" measuredWidth="456" measuredHeight="872">
+  <widgets xsi:type="model:Master" id="1" x="24" y="24" measuredWidth="456" measuredHeight="872">
     <screen xsi:type="model:WidgetGroup" href="assets/Android5/Devices/Nexus%206.screen#Nexus%206"/>
   </widgets>
-  <widgets xsi:type="model:Shape" id="3" x="544" y="688" width="64" height="64" text="+" measuredWidth="64" measuredHeight="64">
+  <widgets xsi:type="model:Shape" id="3" x="368" y="702" width="64" height="64" text="+" measuredWidth="64" measuredHeight="64">
     <font size="72px"/>
   </widgets>
-  <widgets xsi:type="model:WidgetGroup" id="9" x="221" y="111" measuredWidth="410" measuredHeight="50">
+  <widgets xsi:type="model:WidgetGroup" id="15" x="45" y="302" measuredWidth="410" measuredHeight="480">
+    <widgets xsi:type="model:Table" id="16" width="410" height="480" text="(align:center).Profile Name, (align:center).Rounds,(align:center). &#xA;(align:left).{image} Sig Sauer P226, 5000,{edit} %(color:CC0000){trash}%&#xA;(align:left).{image} Sig Sauer P239, 1000,{edit} %(color:CC0000){trash}%&#xA;(align:left).{image} Sig Sauer P365, 200,{edit} %(color:CC0000){trash}%&#xA;(align:left).{image} AR-15 Rifle, 500, {edit} %(color:CC0000){trash}%&#xA;(align:left).{image} AR-15 Pistol , 100,{edit} %(color:CC0000){trash}%&#xA;(align:left).{image} Savage 110 Tactical, 30,{edit} %(color:CC0000){trash}%&#xA;(align:left).{image} Mossberg 590A1 12ga, 200,{edit} %(color:CC0000){trash}%" measuredWidth="410" measuredHeight="480" verticalScrollbar="true" rowHeight="35" horizontalLines="true" header="false">
+      <font size="16px"/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="17" x="359" y="694" measuredWidth="73" measuredHeight="73">
+    <widgets xsi:type="model:Shape" id="18" width="73" height="73" measuredWidth="73" measuredHeight="73" background="#3d85c6">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Icon" id="19" x="16" y="16" width="41" height="41" measuredWidth="41" measuredHeight="41" icon="add (large)"/>
+  </widgets>
+  <widgets xsi:type="model:Icon" id="39" x="47" y="179" measuredWidth="32" measuredHeight="32" icon="filter (large)"/>
+  <widgets xsi:type="model:Combo" id="40" x="264" y="180" text="Select Manufactuer" measuredWidth="160" measuredHeight="29">
+    <font size="16px"/>
+  </widgets>
+  <widgets xsi:type="model:Combo" id="41" x="88" y="214" width="160" text="Select Caliber" measuredWidth="160" measuredHeight="29">
+    <font size="16px"/>
+  </widgets>
+  <widgets xsi:type="model:Combo" id="42" x="88" y="180" width="160" text="Select Type" measuredWidth="160" measuredHeight="29">
+    <font size="16px"/>
+  </widgets>
+  <widgets xsi:type="model:Icon" id="43" x="323" y="261" measuredWidth="32" measuredHeight="32" icon="desc (large)"/>
+  <widgets xsi:type="model:Combo" id="44" x="89" y="262" width="224" text="Last Updated" measuredWidth="224" measuredHeight="29">
+    <font size="16px"/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="45" x="53" y="262" text="Sort" measuredWidth="37" measuredHeight="29">
+    <font size="16px" bold="true"/>
+  </widgets>
+  <widgets xsi:type="model:HLine" id="46" x="45" y="249" width="410" measuredWidth="410" measuredHeight="6"/>
+  <widgets xsi:type="model:WidgetGroup" id="49" x="45" y="125" measuredWidth="410" measuredHeight="50">
     <widgets xsi:type="model:Master" id="10" width="410" measuredWidth="410" measuredHeight="50">
       <screen xsi:type="model:WidgetGroup" href="assets/Android5/Navigation.screen#App%20Bar"/>
       <overrides>
@@ -17,11 +46,7 @@
         <widgets ref="5" y="9" text="Firearm Profiles"/>
       </overrides>
     </widgets>
-  </widgets>
-  <widgets xsi:type="model:WidgetGroup" id="15" x="221" y="160" height="608" measuredWidth="410" measuredHeight="608">
-    <widgets xsi:type="model:Table" id="16" width="410" height="608" text="Ammo Profile,(w:10). &#xA;Sig Sauer P226 - 9mm - Rounds: XXX,{list-bullet} {edit} {trash}&#xA;Sig Sauer P239 - 9mm - Rounds: XXX,{list-bullet} {edit} {trash}&#xA;Sig Sauer P365 - 9mm - Rounds: XXX,{list-bullet} {edit} {trash}&#xA;AR-15 Rifle - 5.56x45 - Rounds: XXX,{list-bullet} {edit} {trash}&#xA;AR-15 Pistol - 5.56x45 - Rounds: XXX,{list-bullet} {edit} {trash}&#xA;Savage 110 Tactical - .308 Win - Rounds: XXX,{list-bullet} {edit} {trash}&#xA;Mossberg 590A1 12ga -  Rounds: XXX,{list-bullet} {edit} {trash}" measuredWidth="410" measuredHeight="608" selection="1" verticalScrollbar="true" rowHeight="35">
-      <font size="16px"/>
-    </widgets>
+    <widgets xsi:type="model:Icon" id="47" x="370" y="9" measuredWidth="32" measuredHeight="32" icon="export (large)"/>
   </widgets>
   <hRuler/>
   <vRuler/>

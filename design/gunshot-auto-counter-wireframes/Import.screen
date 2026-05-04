@@ -1,6 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model:Screen xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
-  <hRuler/>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore" xmlns:o="http://wireframesketcher.com/1.0/model/overrides">
+  <widgets xsi:type="model:Master" id="1" x="-432" y="37" measuredWidth="456" measuredHeight="872">
+    <screen xsi:type="model:WidgetGroup" href="assets/Android5/Devices/Nexus%206.screen#Nexus%206"/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="2" x="-407" y="139" measuredWidth="409" measuredHeight="50">
+    <widgets xsi:type="model:Master" id="3" width="409" measuredWidth="409" measuredHeight="50">
+      <screen xsi:type="model:WidgetGroup" href="assets/Android5/Navigation.screen#App%20Bar"/>
+      <overrides>
+        <widgetChanges xsi:type="o:Delete" ref="6"/>
+        <widgetChanges xsi:type="o:Delete" ref="3"/>
+        <widgets ref="2" width="409" height="50"/>
+        <widgets ref="4" y="13">
+          <attributes key="icon" value="assets/ic-keyboard-backspace (medium)"/>
+        </widgets>
+        <widgets ref="5" y="9" text="Import"/>
+      </overrides>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:Button" id="14" x="-389" y="195" text="Import from File" measuredWidth="162" measuredHeight="38">
+    <font size="20px"/>
+  </widgets>
+  <widgets xsi:type="model:Button" id="15" x="-189" y="195" text="Import from Text" measuredWidth="166" measuredHeight="38">
+    <font size="20px"/>
+  </widgets>
+  <widgets xsi:type="model:Window" id="17" x="48" y="64" text="Import from Text" measuredWidth="400" measuredHeight="300"/>
+  <widgets xsi:type="model:TextArea" id="18" x="67" y="117" width="361" height="193" text="|" measuredWidth="361" measuredHeight="193">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="20" x="280" y="92" text="Paste from Clipboard" measuredWidth="118" measuredHeight="23">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Icon" id="21" x="397" y="90" width="24" height="26" measuredWidth="24" measuredHeight="26" icon="paste (large)"/>
+  <widgets xsi:type="model:Label" id="22" x="67" y="93" text="Enter JSON, CSV, or XML to Import" measuredWidth="188" measuredHeight="23">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Button" id="23" x="128" y="316" width="77" text="Import" measuredWidth="77" measuredHeight="38">
+    <font size="20px"/>
+  </widgets>
+  <widgets xsi:type="model:Button" id="24" x="288" y="316" text="Cancel" measuredWidth="77" measuredHeight="38">
+    <font size="20px"/>
+  </widgets>
+  <widgets xsi:type="model:Tree" id="25" x="-411" y="276" width="410" height="468" text="[+] {unchecked} Sessions&#xA;-[x] 2026-04-27 - Savage 110 Tactical - .308 - 15 rds&#xA;-[] 2026-04-27 - P226 - 9mm - 30 rds&#xA;-[x] 2026-04-27 - P239 - 9mm - 14 rds&#xA;-[] 2026-04-27 - AR-15 Rifle - 5.56x45mm - 60 rds&#xA;-[] 2026-04-27 - AR-15 Pistol - 5.56x45mm - 40 rds&#xA;[+] {checked} Firearm Profiles&#xA;-[x] Savage 110 Tactical&#xA;-[x] Sig Sauer P226&#xA;-[x] Sig Sauer P239&#xA;-[x] AR-15 Rifle&#xA;-[x] AR-15 Pistol&#xA;[+] {uncheck} Ammo Profiles&#xA;-[] Blazer 9mm 124gr&#xA;-[x] Blazer 9mm 115gr&#xA;-[x] Federal Premium 9mm 147gr HST HP&#xA;-[] Speer Gold Dot 9mm 124gr GDHP&#xA;-[] Remington Rifled Slug 12ga&#xA;-[x] Federal Buckshot 00 12ga&#xA;-[] X-TAC Match 5.56x45mm 62gr" measuredWidth="410" measuredHeight="468" verticalScrollbar="true">
+    <items x="0" y="5" width="393" height="21" text="[+] {unchecked} Sessions"/>
+    <items x="0" y="26" width="393" height="21" text="-[x] 2026-04-27 - Savage 110 Tactical - .308 - 15 rds"/>
+    <items x="0" y="47" width="393" height="21" text="-[] 2026-04-27 - P226 - 9mm - 30 rds"/>
+    <items x="0" y="68" width="393" height="21" text="-[x] 2026-04-27 - P239 - 9mm - 14 rds"/>
+    <items x="0" y="89" width="393" height="21" text="-[] 2026-04-27 - AR-15 Rifle - 5.56x45mm - 60 rds"/>
+    <items x="0" y="110" width="393" height="21" text="-[] 2026-04-27 - AR-15 Pistol - 5.56x45mm - 40 rds"/>
+    <items x="0" y="131" width="393" height="21" text="[+] {checked} Firearm Profiles"/>
+    <items x="0" y="152" width="393" height="21" text="-[x] Savage 110 Tactical"/>
+    <items x="0" y="173" width="393" height="21" text="-[x] Sig Sauer P226"/>
+    <items x="0" y="194" width="393" height="21" text="-[x] Sig Sauer P239"/>
+    <items x="0" y="215" width="393" height="21" text="-[x] AR-15 Rifle"/>
+    <items x="0" y="236" width="393" height="21" text="-[x] AR-15 Pistol"/>
+    <items x="0" y="257" width="393" height="21" text="[+] {uncheck} Ammo Profiles"/>
+    <items x="0" y="278" width="393" height="21" text="-[] Blazer 9mm 124gr"/>
+    <items x="0" y="299" width="393" height="21" text="-[x] Blazer 9mm 115gr"/>
+    <items x="0" y="320" width="393" height="21" text="-[x] Federal Premium 9mm 147gr HST HP"/>
+    <items x="0" y="341" width="393" height="21" text="-[] Speer Gold Dot 9mm 124gr GDHP"/>
+    <items x="0" y="362" width="393" height="21" text="-[] Remington Rifled Slug 12ga"/>
+    <items x="0" y="383" width="393" height="21" text="-[x] Federal Buckshot 00 12ga"/>
+    <items x="0" y="404" width="393" height="21" text="-[] X-TAC Match 5.56x45mm 62gr"/>
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Button" id="26" x="-287" y="751" text="Import Selected" measuredWidth="159" measuredHeight="38">
+    <font size="20px"/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="33" x="-401" y="254" measuredWidth="106" measuredHeight="23">
+    <widgets xsi:type="model:Label" id="29" x="20" text="Select All Items" measuredWidth="86" measuredHeight="23">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Icon" id="30" y="3" width="18" height="18" measuredWidth="18" measuredHeight="18" icon="unchecked (large)"/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="32" x="-303" y="232" text="Supported Formats: JSON, CSV, XML" measuredWidth="191" measuredHeight="21">
+    <font size="10px"/>
+  </widgets>
+  <hRuler>
+    <guides position="2031"/>
+  </hRuler>
   <vRuler/>
   <font size="12px"/>
 </model:Screen>

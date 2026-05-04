@@ -1,5 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model:Screen xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore" xmlns:o="http://wireframesketcher.com/1.0/model/overrides">
+  <widgets xsi:type="model:Master" id="3" x="23" y="16" locked="true" measuredWidth="456" measuredHeight="872">
+    <screen xsi:type="model:WidgetGroup" href="assets/Android5/Devices/Nexus%206.screen#Nexus%206"/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="4" x="45" y="118" measuredWidth="409" measuredHeight="50">
+    <widgets xsi:type="model:Master" id="5" width="409" measuredWidth="409" measuredHeight="50">
+      <screen xsi:type="model:WidgetGroup" href="assets/Android5/Navigation.screen#App%20Bar"/>
+      <overrides>
+        <widgetChanges xsi:type="o:Delete" ref="6"/>
+        <widgetChanges xsi:type="o:Delete" ref="3"/>
+        <widgets ref="2" width="409" height="50"/>
+        <widgets ref="4" y="13">
+          <attributes key="icon" value="assets/ic-keyboard-backspace (medium)"/>
+        </widgets>
+        <widgets ref="5" y="9" text="Session Ammo Usage Record"/>
+      </overrides>
+    </widgets>
+    <widgets xsi:type="model:Icon" id="7" x="319" y="15" width="16" height="16" measuredWidth="16" measuredHeight="16" icon="info (small)"/>
+  </widgets>
+  <widgets xsi:type="model:Image" id="15" x="299" y="190" width="144" height="150" text="image of firearm" measuredWidth="144" measuredHeight="150"/>
+  <widgets xsi:type="model:WidgetGroup" id="24" x="44" y="567" measuredWidth="410" measuredHeight="205">
+    <widgets xsi:type="model:Table" id="25" width="410" height="205" text="(align:center).Detected At,(align:center).Detection Source, (align:center).Confidence, (align:center).Peak dB&#xD;&#xA;2026-05-01T15:04:32Z,manual,0.42,124 dB&#xD;&#xA;2026-05-01T15:04:33Z,microphone,0.18,97 dB&#xD;&#xA;2026-05-01T15:04:34Z,import,0.85,152 dB&#xD;&#xA;2026-05-01T15:04:35Z,microphone,0.59,118 dB&#xD;&#xA;2026-05-01T15:04:36Z,manual,0.21,141 dB&#xD;&#xA;2026-05-01T15:04:37Z,import,0.07,105 dB&#xD;&#xA;2026-05-01T15:04:38Z,microphone,0.93,158 dB&#xD;&#xA;" measuredWidth="410" measuredHeight="205" verticalScrollbar="true" rowHeight="26" horizontalLines="true">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:Master" id="35" x="45" y="534" height="34" measuredWidth="409" measuredHeight="34">
+    <screen xsi:type="model:WidgetGroup" href="assets/Android5/Navigation.screen#App%20Bar"/>
+    <overrides>
+      <widgetChanges xsi:type="o:Delete" ref="6"/>
+      <widgetChanges xsi:type="o:Delete" ref="3"/>
+      <widgetChanges xsi:type="o:Delete" ref="4"/>
+      <widgets ref="2" y="2" width="409" height="34">
+        <attributes key="border" value="solid"/>
+        <attributes key="background" value="#9fc5e8"/>
+      </widgets>
+      <widgets ref="5" x="128" y="0" text="Gunshot Events">
+        <font bold="true"/>
+      </widgets>
+    </overrides>
+  </widgets>
+  <widgets xsi:type="model:Label" id="9" x="68" y="181" text="Session Date" measuredWidth="72" measuredHeight="23" foreground="#666">
+    <font size="12px"/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="72" x="158" y="181" text="2026-01-01" measuredWidth="72" measuredHeight="23">
+    <font size="12px" bold="true"/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="11" x="57" y="205" text="Firearm Profile" measuredWidth="83" measuredHeight="23" foreground="#666">
+    <font size="12px"/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="73" x="158" y="205" text="Sig Sauer P226" measuredWidth="89" measuredHeight="23">
+    <font size="12px" bold="true"/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="12" x="60" y="229" text="Ammo Profile" measuredWidth="80" measuredHeight="23" foreground="#666">
+    <font size="12px"/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="74" x="158" y="229" text="Blazer 9mm 124gr" measuredWidth="109" measuredHeight="23">
+    <font size="12px" bold="true"/>
+  </widgets>
+  <widgets xsi:type="model:Image" id="77" x="299" y="362" width="144" height="150" text="image of ammo" measuredWidth="144" measuredHeight="150"/>
+  <widgets xsi:type="model:Label" id="10" x="55" y="264" text="Recorded Round Count" measuredWidth="130" measuredHeight="23" foreground="#666">
+    <font size="12px"/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="78" x="194" y="252" text="30" measuredWidth="38" measuredHeight="46">
+    <font size="28px" bold="true"/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="99" x="57" y="295" measuredWidth="125" measuredHeight="23">
+    <widgets xsi:type="model:Label" id="84" text="Ammo Lot Numbers" measuredWidth="115" measuredHeight="23" foreground="#666">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Icon" id="85" x="112" y="5" width="13" height="13" measuredWidth="13" measuredHeight="13" icon="info (small)"/>
+  </widgets>
+  <widgets xsi:type="model:TextArea" id="86" x="57" y="315" width="218" height="77" measuredWidth="218" measuredHeight="77">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="88" x="57" y="394" text="Notes" measuredWidth="37" measuredHeight="23" foreground="#666">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:TextArea" id="90" x="57" y="414" width="218" height="98" measuredWidth="218" measuredHeight="98">
+    <font/>
+  </widgets>
   <hRuler/>
   <vRuler/>
   <font size="12px"/>

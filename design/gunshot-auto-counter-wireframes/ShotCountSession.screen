@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore" xmlns:o="http://wireframesketcher.com/1.0/model/overrides">
-  <widgets xsi:type="model:Master" id="1" x="672" y="104" measuredWidth="456" measuredHeight="872">
+  <widgets xsi:type="model:Master" id="1" x="40" y="27" measuredWidth="456" measuredHeight="872">
     <screen xsi:type="model:WidgetGroup" href="assets/Android5/Devices/Nexus%206.screen#Nexus%206"/>
   </widgets>
-  <widgets xsi:type="model:Master" id="2" x="693" y="205" width="410" measuredWidth="410" measuredHeight="56">
+  <widgets xsi:type="model:Master" id="2" x="61" y="128" measuredWidth="410" measuredHeight="56">
     <screen xsi:type="model:WidgetGroup" href="assets/Android5/Navigation.screen#App%20Bar"/>
     <overrides>
       <widgetChanges xsi:type="o:Delete" ref="6"/>
@@ -12,7 +12,7 @@
       <widgets ref="5" text="Shot Count Session"/>
     </overrides>
   </widgets>
-  <widgets xsi:type="model:WidgetGroup" id="31" x="703" y="273" width="390" measuredWidth="389" measuredHeight="36">
+  <widgets xsi:type="model:WidgetGroup" id="31" x="71" y="196" measuredWidth="389" measuredHeight="36">
     <widgets xsi:type="model:Combo" id="4" x="158" width="231" text="Savage 110&#xD;&#xA;" measuredWidth="231" measuredHeight="36">
       <font size="20px"/>
     </widgets>
@@ -20,8 +20,8 @@
       <font size="20px" bold="true"/>
     </widgets>
   </widgets>
-  <widgets xsi:type="model:HLine" id="7" x="693" y="336" width="410" measuredWidth="410" measuredHeight="6"/>
-  <widgets xsi:type="model:WidgetGroup" id="30" x="703" y="351" measuredWidth="386" measuredHeight="36">
+  <widgets xsi:type="model:HLine" id="7" x="61" y="259" width="410" measuredWidth="410" measuredHeight="6"/>
+  <widgets xsi:type="model:WidgetGroup" id="30" x="71" y="274" measuredWidth="386" measuredHeight="36">
     <widgets xsi:type="model:Combo" id="8" x="147" width="239" text=".308 Generic&#xD;&#xA;" measuredWidth="239" measuredHeight="36">
       <font size="20px"/>
     </widgets>
@@ -29,31 +29,31 @@
       <font size="20px" bold="true"/>
     </widgets>
   </widgets>
-  <widgets xsi:type="model:HLine" id="11" x="692" y="624" width="410" measuredWidth="410" measuredHeight="6"/>
-  <widgets xsi:type="model:Button" id="13" x="822" y="792" height="63" text="LISTEN" measuredWidth="167" measuredHeight="63">
+  <widgets xsi:type="model:HLine" id="11" x="60" y="547" width="410" measuredWidth="410" measuredHeight="6"/>
+  <widgets xsi:type="model:Button" id="13" x="190" y="715" height="63" text="LISTEN" measuredWidth="167" measuredHeight="63" background="#6aa84f">
     <font size="48px"/>
   </widgets>
-  <widgets xsi:type="model:WidgetGroup" id="21" x="709" y="568" measuredWidth="0" measuredHeight="0"/>
-  <widgets xsi:type="model:WidgetGroup" id="50" x="711" y="640" measuredWidth="372" measuredHeight="128">
+  <widgets xsi:type="model:WidgetGroup" id="21" x="77" y="491" measuredWidth="0" measuredHeight="0"/>
+  <widgets xsi:type="model:WidgetGroup" id="50" x="79" y="563" measuredWidth="372" measuredHeight="128">
     <widgets xsi:type="model:Label" id="12" x="84" text="1234" measuredWidth="202" measuredHeight="128">
       <font size="90px"/>
     </widgets>
     <widgets xsi:type="model:Icon" id="24" x="315" y="43" width="57" height="53" measuredWidth="57" measuredHeight="53" icon="squared-plus (large)"/>
     <widgets xsi:type="model:Icon" id="25" y="43" width="57" height="53" measuredWidth="57" measuredHeight="53" icon="squared-minus (custom)"/>
   </widgets>
-  <widgets xsi:type="model:Switch" id="26" x="824" y="632" text="ON,OFF" measuredWidth="70" measuredHeight="23" selected="true" background="#3d85c6">
+  <widgets xsi:type="model:Switch" id="26" x="192" y="555" text="ON,OFF" measuredWidth="70" measuredHeight="23" selected="true" background="#3d85c6">
     <font/>
   </widgets>
-  <widgets xsi:type="model:Label" id="27" x="703" y="632" text="Show Manual Buttons" measuredWidth="122" measuredHeight="23">
+  <widgets xsi:type="model:Label" id="27" x="71" y="555" text="Show Manual Buttons" measuredWidth="122" measuredHeight="23">
     <font/>
   </widgets>
-  <widgets xsi:type="model:WidgetGroup" id="45" x="695" y="423" measuredWidth="410" measuredHeight="205">
-    <widgets xsi:type="model:Table" id="29" width="410" height="205" text="Ammo Profile,(w:30). Count,(w:20). &#xA;Total,1269, {list-bullet} {trash}&#xA;.308 Generic,1234,{list-bullet} {trash}&#xA;.308 X-TAC,10,{list-bullet} {trash}&#xA;.308 PMC Bronze,20,{list-bullet} {trash}&#xA;.308 Federal Match,5,{list-bullet} {trash}" measuredWidth="410" measuredHeight="205" selection="1" verticalScrollbar="true" rowHeight="26">
+  <widgets xsi:type="model:WidgetGroup" id="45" x="63" y="346" measuredWidth="410" measuredHeight="205">
+    <widgets xsi:type="model:Table" id="29" width="410" height="205" text="Ammo Profile,(w:30). Count,(w:20). &#xA;Total,1269, {list-bullet} %(color:CC0000){trash}%&#xA;.308 Generic,1234,{list-bullet} %(color:CC0000){trash}%&#xA;.308 X-TAC,10,{list-bullet} %(color:CC0000){trash}%&#xA;.308 PMC Bronze,20,{list-bullet} %(color:CC0000){trash}%&#xA;.308 Federal Match,5,{list-bullet} %(color:CC0000){trash}%" measuredWidth="410" measuredHeight="205" selection="1" verticalScrollbar="true" rowHeight="26">
       <font/>
     </widgets>
   </widgets>
-  <widgets xsi:type="model:WidgetGroup" id="36" x="1061" y="215" measuredWidth="0" measuredHeight="0"/>
-  <widgets xsi:type="model:Master" id="41" x="710" y="302" measuredWidth="392" measuredHeight="33">
+  <widgets xsi:type="model:WidgetGroup" id="36" x="429" y="138" measuredWidth="0" measuredHeight="0"/>
+  <widgets xsi:type="model:Master" id="41" x="78" y="225" measuredWidth="392" measuredHeight="33">
     <screen xsi:type="model:WidgetGroup" href="assets/Android5/Lists.screen#List%20Expand%20Collapse"/>
     <overrides>
       <widgetChanges xsi:type="o:Delete" ref="141"/>
@@ -73,7 +73,7 @@
       </widgets>
     </overrides>
   </widgets>
-  <widgets xsi:type="model:Master" id="42" x="710" y="381" measuredWidth="392" measuredHeight="33">
+  <widgets xsi:type="model:Master" id="42" x="78" y="304" measuredWidth="392" measuredHeight="33">
     <screen xsi:type="model:WidgetGroup" href="assets/Android5/Lists.screen#List%20Expand%20Collapse"/>
     <overrides>
       <widgetChanges xsi:type="o:Delete" ref="141"/>
@@ -93,18 +93,18 @@
       </widgets>
     </overrides>
   </widgets>
-  <widgets xsi:type="model:Label" id="46" x="968" y="632" text="Show dB" measuredWidth="52" measuredHeight="23">
+  <widgets xsi:type="model:Label" id="46" x="336" y="555" text="Show dB" measuredWidth="52" measuredHeight="23">
     <font/>
   </widgets>
-  <widgets xsi:type="model:Switch" id="47" x="1019" y="632" text="ON,OFF" measuredWidth="70" measuredHeight="23" selected="true" background="#3d85c6">
+  <widgets xsi:type="model:Switch" id="47" x="387" y="555" text="ON,OFF" measuredWidth="70" measuredHeight="23" selected="true" background="#3d85c6">
     <font/>
   </widgets>
-  <widgets xsi:type="model:ProgressBar" id="49" x="728" y="752" width="328" height="32" measuredWidth="328" measuredHeight="32" background="#999"/>
-  <widgets xsi:type="model:Label" id="51" x="857" y="745" text="75 dB" measuredWidth="81" measuredHeight="46">
+  <widgets xsi:type="model:ProgressBar" id="49" x="96" y="675" width="328" height="32" measuredWidth="328" measuredHeight="32" background="#999"/>
+  <widgets xsi:type="model:Label" id="51" x="225" y="668" text="75 dB" measuredWidth="81" measuredHeight="46">
     <font size="28px" bold="true"/>
   </widgets>
-  <widgets xsi:type="model:Icon" id="53" x="1055" y="219" measuredWidth="32" measuredHeight="32" icon="undo (large)"/>
-  <widgets xsi:type="model:Icon" id="54" x="1008" y="217" measuredWidth="32" measuredHeight="32" icon="export (large)"/>
+  <widgets xsi:type="model:Icon" id="53" x="423" y="142" measuredWidth="32" measuredHeight="32" icon="undo (large)"/>
+  <widgets xsi:type="model:Icon" id="54" x="376" y="140" measuredWidth="32" measuredHeight="32" icon="export (large)"/>
   <hRuler>
     <guides position="2036"/>
   </hRuler>
