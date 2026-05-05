@@ -1,0 +1,104 @@
+Date, Location, Count
+2026-03-04, Centerline, 10
+2026-03-12, Centerline, 10
+2026-03-19, Freedom Firearms, 20
+2026-03-27, Centerline, 15
+2026-03-31, Freedom Firearms, 5
+2026-04-06, 269 Sports Plaza, 20
+2026-04-11, Centerline, 30
+2026-04-18, Freedom Firearms, 5
+2026-04-22, 269 Sports Plaza, 10
+2026-04-25, Freedom Firearms, 5
+
+
+Total,1269, {list-bullet} {trash}
+.308 Generic,1234,{list-bullet} {trash}
+.308 X-TAC,10,{list-bullet} {trash}
+.308 PMC Bronze,20,{list-bullet} {trash}
+.308 Federal Match,5,{list-bullet} {trash}
+
+
+(w:20)(align:center).Date, Location, (w:20)(align:center).Count
+
+
+noise_suppress_filter
+gain_filter
+compressor_filter
+noise_gate_filter
+
+
+"source_uuid": "04445950-170c-478c-8f7d-46c72231fae0",
+"id": 18,
+
+"source_uuid": "a783c559-27e3-454c-8519-399edb29cad9",
+"id": 21,
+
+
+
+[] Sessions
+-[] 2026-04-27 - Savage 110 Tactical - .308 - 15 rds
+-[] 2026-04-27 - P226 - 9mm - 30 rds
+-[] 2026-04-27 - P239 - 9mmk - 14 rds
+-[] 2026-04-27 - AR-15 Rifle - 5.56x45mm - 60 rds
+-[] 2026-04-27 - AR-15 Pistol - 5.56x45mm - 40 rds
+[] Firearm Profiles
+-[] Savage 110 Tactical
+-[] Sig Sauer P226
+-[] Sig Sauer P239
+-[] AR-15 Rifle
+-[] AR-15 Pistol
+[v] Ammo Profiles
+-[] Blazer 9mm 124gr
+-[] Blazer 9mm 115gr
+-[] Federal Premium 9mm 147gr HST HP
+-[] Speer Gold Dot 9mm 124gr GDHP
+-[] Remington Rifled Slug 12ga
+-[] Federal Buckshot 00 12ga
+-[] X-TAC Match 5.56x45mm 62gr
+
+Volder One
+-Folder Two
+--File One
+--File Two
+v Ammo Profiles
+-[>] Closed Folder
+-[v] Open Folder
+> Expand Arrow
+[-] Collapse
+-[+] Expand
+[] You can have
+[x] Checkboxes
+() And even radio buttons
+{attachment} Or just any other icon
+[_] And no icon too
+
+
+2026-05-01T15:04:32Z,manual,0.42,124 dB
+2026-05-01T15:04:33Z,microphone,0.18,97 dB
+2026-05-01T15:04:34Z,import,0.85,152 dB
+2026-05-01T15:04:35Z,microphone,0.59,118 dB
+2026-05-01T15:04:36Z,manual,0.21,141 dB
+2026-05-01T15:04:37Z,import,0.07,105 dB
+2026-05-01T15:04:38Z,microphone,0.93,158 dB
+2026-05-01T15:04:39Z,manual,0.64,133 dB
+2026-05-01T15:04:40Z,import,0.36,92 dB
+2026-05-01T15:04:41Z,microphone,0.77,146 dB
+
+
+Regarding my app, see if you can follow this:
+
+"SESSIONS" are like individual range trips where you may shoot multiple guns and ammo.
+
+A SESSION has multiple instances of "AMMO_USAGE".
+
+An AMMO_USAGE is associated with a firearm profile and ammo profile.
+
+An AMMO_USAGE has a count of rounds.
+
+An AMMO_USAGE is associated with a collection of individual "SHOT_EVENTS".false
+
+I'm not sure each gunshot needs its own data structure, but the AI suggested it so I'm going to see where it's going. And I'm not super happy with my my object names so I may try to change those.
+
+So here is an image showing the UI flow. THe last screen is the new one. I included all the important existing database fields.
+
+Any feedback on it?

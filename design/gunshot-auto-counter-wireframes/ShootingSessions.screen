@@ -3,19 +3,6 @@
   <widgets xsi:type="model:Master" id="1" x="37" y="32" locked="true" measuredWidth="456" measuredHeight="872">
     <screen xsi:type="model:WidgetGroup" href="assets/Android5/Devices/Nexus%206.screen#Nexus%206"/>
   </widgets>
-  <widgets xsi:type="model:List" id="2" x="58" y="182" width="410" height="608" text="2026-04-27 - Savage 110 Tactical - .308 - 15 rds&#xA;2026-04-27 - P226 - 9mm - 30 rds&#xA;2026-04-27 - P239 - 9mmk - 14 rds&#xA;2026-04-27 - AR-15 Rifle - 5.56x45mm - 60 rds&#xA;2026-04-27 - AR-15 Pistol - 5.56x45mm - 40 rds&#xA;" measuredWidth="410" measuredHeight="608" value="50" verticalScrollbar="true" rowHeight="44" horizontalLines="true" alternative="#ccc">
-    <font/>
-    <items x="0" y="2" width="393" height="44" text="2026-04-27 - Savage 110 Tactical - .308 - 15 rds"/>
-    <items x="0" y="46" width="393" height="44" text="2026-04-27 - P226 - 9mm - 30 rds"/>
-    <items x="0" y="90" width="393" height="44" text="2026-04-27 - P239 - 9mmk - 14 rds"/>
-    <items x="0" y="134" width="393" height="44" text="2026-04-27 - AR-15 Rifle - 5.56x45mm - 60 rds"/>
-    <items x="0" y="178" width="393" height="44" text="2026-04-27 - AR-15 Pistol - 5.56x45mm - 40 rds"/>
-  </widgets>
-  <widgets xsi:type="model:Icon" id="11" x="413" y="190" measuredWidth="32" measuredHeight="32" foreground="#c00" icon="trash (large)"/>
-  <widgets xsi:type="model:Icon" id="12" x="413" y="234" measuredWidth="32" measuredHeight="32" foreground="#c00" icon="trash (large)"/>
-  <widgets xsi:type="model:Icon" id="13" x="413" y="279" measuredWidth="32" measuredHeight="32" foreground="#c00" icon="trash (large)"/>
-  <widgets xsi:type="model:Icon" id="14" x="413" y="323" measuredWidth="32" measuredHeight="32" foreground="#c00" icon="trash (large)"/>
-  <widgets xsi:type="model:Icon" id="15" x="413" y="368" measuredWidth="32" measuredHeight="32" foreground="#c00" icon="trash (large)"/>
   <widgets xsi:type="model:WidgetGroup" id="18" x="58" y="133" measuredWidth="410" measuredHeight="50">
     <widgets xsi:type="model:Master" id="3" width="410" measuredWidth="410" measuredHeight="50">
       <screen xsi:type="model:WidgetGroup" href="assets/Android5/Navigation.screen#App%20Bar"/>
@@ -24,11 +11,14 @@
         <widgetChanges xsi:type="o:Delete" ref="3"/>
         <widgets ref="2" width="410" height="50"/>
         <widgets ref="4" y="13"/>
-        <widgets ref="5" y="9" text="Shot Count Sessions"/>
+        <widgets ref="5" y="9" text="Shooting Sessions"/>
       </overrides>
     </widgets>
     <widgets xsi:type="model:Icon" id="16" x="355" y="9" measuredWidth="32" measuredHeight="32" icon="assets/cartridge-plus (large)"/>
     <widgets xsi:type="model:Icon" id="17" x="315" y="9" measuredWidth="32" measuredHeight="32" icon="assets/pistol-plus (large)"/>
+  </widgets>
+  <widgets xsi:type="model:Table" id="25" x="58" y="182" width="409" height="607" text="(align:center)(width:80).2026-03-04, Centerline,(width:60)(align:center).10,(align:center)(width:40).%(color:red){trash}%&#xD;&#xA;2026-03-12, Centerline,100,(align:center)(width:40).%(color:red){trash}%&#xD;&#xA;2026-03-19, Freedom Firearms,200,(align:center)(width:40).%(color:red){trash}%&#xD;&#xA;2026-03-27, Centerline,150,(align:center)(width:40).%(color:red){trash}%&#xD;&#xA;2026-03-31, Freedom Firearms,50,(align:center)(width:40).%(color:red){trash}%&#xD;&#xA;2026-04-06, 269 Sports Plaza,20,(align:center)(width:40).%(color:red){trash}%&#xD;&#xA;2026-04-11, Centerline,300,(align:center)(width:40).%(color:red){trash}%&#xD;&#xA;2026-04-18, Freedom Firearms,50,(align:center)(width:40).%(color:red){trash}%&#xD;&#xA;2026-04-22, 269 Sports Plaza,100,(align:center)(width:40).%(color:red){trash}%&#xD;&#xA;2026-04-25, Freedom Firearms,50,(align:center)(width:40).%(color:red){trash}%" measuredWidth="409" measuredHeight="607" rowHeight="39" alternative="#eee" header="false">
+    <font/>
   </widgets>
   <widgets xsi:type="model:WidgetGroup" id="22" x="372" y="702" measuredWidth="73" measuredHeight="73">
     <widgets xsi:type="model:Shape" id="23" width="73" height="73" measuredWidth="73" measuredHeight="73" background="#3d85c6">

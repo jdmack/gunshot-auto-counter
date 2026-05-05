@@ -13,10 +13,10 @@
         <widgets ref="4" y="13">
           <attributes key="icon" value="assets/ic-keyboard-backspace (medium)"/>
         </widgets>
-        <widgets ref="5" y="9" text="Session Ammo Usage Record"/>
+        <widgets ref="5" y="9" text="Shot Series"/>
       </overrides>
     </widgets>
-    <widgets xsi:type="model:Icon" id="7" x="319" y="15" width="16" height="16" measuredWidth="16" measuredHeight="16" icon="info (small)"/>
+    <widgets xsi:type="model:Icon" id="7" x="162" y="17" measuredWidth="16" measuredHeight="16" icon="info (small)"/>
   </widgets>
   <widgets xsi:type="model:Image" id="15" x="299" y="190" width="144" height="150" text="image of firearm" measuredWidth="144" measuredHeight="150"/>
   <widgets xsi:type="model:WidgetGroup" id="24" x="44" y="567" measuredWidth="410" measuredHeight="205">

@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS ammo_profile (
     CHECK (velocity_fps IS NULL OR velocity_fps > 0)
 );
 
-CREATE TABLE IF NOT EXISTS gunshot_count_session (
+CREATE TABLE IF NOT EXISTS shooting_session (
     id TEXT PRIMARY KEY,
     firearm_id TEXT NOT NULL,
     location_name TEXT,
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS session_ammo_usage (
     recorded_round_count INTEGER NOT NULL DEFAULT 0 CHECK (recorded_round_count >= 0),
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    FOREIGN KEY (session_id) REFERENCES gunshot_count_session(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (session_id) REFERENCES shooting_session(id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (ammo_id) REFERENCES ammo_profile(id) ON UPDATE CASCADE ON DELETE RESTRICT,
     UNIQUE (session_id, ammo_id, lot_number)
 );
@@ -78,12 +78,12 @@ CREATE TABLE IF NOT EXISTS shot_event (
     peak_db REAL,
     is_deleted INTEGER NOT NULL DEFAULT 0 CHECK (is_deleted IN (0, 1)),
     created_at TEXT NOT NULL,
-    FOREIGN KEY (session_id) REFERENCES gunshot_count_session(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (session_id) REFERENCES shooting_session(id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (session_ammo_usage_id) REFERENCES session_ammo_usage(id) ON UPDATE CASCADE ON DELETE SET NULL,
     CHECK (confidence IS NULL OR (confidence >= 0.0 AND confidence <= 1.0))
 );
 
-CREATE INDEX IF NOT EXISTS idx_gunshot_count_session_firearm_id ON gunshot_count_session(firearm_id);
+CREATE INDEX IF NOT EXISTS idx_shooting_session_firearm_id ON shooting_session(firearm_id);
 CREATE INDEX IF NOT EXISTS idx_session_ammo_usage_session_id ON session_ammo_usage(session_id);
 CREATE INDEX IF NOT EXISTS idx_session_ammo_usage_ammo_id ON session_ammo_usage(ammo_id);
 CREATE INDEX IF NOT EXISTS idx_shot_event_session_id_detected_at ON shot_event(session_id, detected_at);
@@ -121,8 +121,8 @@ SELECT
     f.previous_round_count
       + COALESCE(COUNT(se.id), 0) AS total_round_count
 FROM firearm_profile f
-LEFT JOIN gunshot_count_session gcs ON gcs.firearm_id = f.id
-LEFT JOIN shot_event se ON se.session_id = gcs.id AND se.is_deleted = 0
+LEFT JOIN shooting_session ss ON ss.firearm_id = f.id
+LEFT JOIN shot_event se ON se.session_id = ss.id AND se.is_deleted = 0
 GROUP BY f.id;
 
 CREATE VIEW IF NOT EXISTS v_ammo_round_totals AS
@@ -136,8 +136,8 @@ GROUP BY a.id;
 
 CREATE VIEW IF NOT EXISTS v_session_round_totals AS
 SELECT
-    gcs.id AS session_id,
+    ss.id AS session_id,
     COALESCE(COUNT(se.id), 0) AS total_round_count
-FROM gunshot_count_session gcs
-LEFT JOIN shot_event se ON se.session_id = gcs.id AND se.is_deleted = 0
-GROUP BY gcs.id;
+FROM shooting_session ss
+LEFT JOIN shot_event se ON se.session_id = ss.id AND se.is_deleted = 0
+GROUP BY ss.id;
