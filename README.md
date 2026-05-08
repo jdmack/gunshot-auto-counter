@@ -4,13 +4,11 @@ Shot Counter POC is an Android app for counting gunshots in real time using micr
 
 ## Screenshots
 
-<img src="assets/screenshots/screenshot_app.png" alt="Main app screen" width="320" />
-<img src="assets/screenshots/screenshot_listening.png" alt="Listening state" width="320" />
-<img src="assets/screenshots/screenshot_gunshot.png" alt="Gunshot detected flash" width="320" />
-<img src="assets/screenshots/screenshot_calibration.png" alt="Calibration panel" width="320" />
-<img src="assets/screenshots/screenshot_testmode.png" alt="Test mode" width="320" />
-<img src="assets/screenshots/screenshot_shotseries.png" alt="Shot series table" width="320" />
-<img src="assets/screenshots/screenshot_howto.png" alt="How-to dialog" width="320" />
+<img src="assets/screenshots/screenshot_app.png" alt="Main app screen" width="200" />        <img src="assets/screenshots/screenshot_listening.png" alt="Listening state" width="200" />        <img src="assets/screenshots/screenshot_gunshot.png" alt="Gunshot detected flash" width="200" />
+
+<img src="assets/screenshots/screenshot_calibration.png" alt="Calibration panel" width="200" />        <img src="assets/screenshots/screenshot_testmode.png" alt="Test mode" width="200" />        <img src="assets/screenshots/screenshot_shotseries.png" alt="Shot series table" width="200" />
+
+<img src="assets/screenshots/screenshot_howto.png" alt="How-to dialog" width="200" />
 
 ## Project
 
