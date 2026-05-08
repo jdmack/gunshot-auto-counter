@@ -1,5 +1,17 @@
 # Shot Counter POC
 
+Shot Counter POC is an Android app for counting gunshots in real time using microphone input, with on-range calibration controls (thresholds and shot gap), test mode tuning, and persistent shot-series tracking.
+
+## Screenshots
+
+![Main app screen](assets/screenshots/screenshot_app.png)
+![Listening state](assets/screenshots/screenshot_listening.png)
+![Gunshot detected flash](assets/screenshots/screenshot_gunshot.png)
+![Calibration panel](assets/screenshots/screenshot_calibration.png)
+![Test mode](assets/screenshots/screenshot_testmode.png)
+![Shot series table](assets/screenshots/screenshot_shotseries.png)
+![How-to dialog](assets/screenshots/screenshot_howto.png)
+
 Workspace root contains general project assets and docs.
 
 Android project root: `app/`
@@ -28,7 +40,7 @@ Android project root: `app/`
 - Temporary last-shot dB display when a shot-like sound is detected.
 - In-app calibration controls for shot threshold, rearm threshold, and minimum shot gap.
 - Calibration Test Mode that records peak history and suggests tuned values after enough samples.
-- Save Series form with default name: Shooting Series YYYY-MM-DD.
+- Save Series form with default name: Shot Series YYYY-MM-DD HH:MM (24-hour).
 - Series table with newest-first ordering, row delete, and delete-all confirmation.
 - Total Count footer summing all saved series counts.
 - Back button behavior: if a series is in progress, save with default name and exit.
