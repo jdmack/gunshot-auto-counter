@@ -12,6 +12,8 @@ Shot Counter POC is an Android app for counting gunshots in real time using micr
 <img src="assets/screenshots/screenshot_shotseries.png" alt="Shot series table" width="320" />
 <img src="assets/screenshots/screenshot_howto.png" alt="How-to dialog" width="320" />
 
+## Project
+
 Workspace root contains general project assets and docs.
 
 Android project root: `app/`
