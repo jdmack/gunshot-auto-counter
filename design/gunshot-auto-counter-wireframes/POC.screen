@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore" xmlns:o="http://wireframesketcher.com/1.0/model/overrides">
+  <widgets xsi:type="model:Master" id="1" x="40" y="27" locked="true" measuredWidth="456" measuredHeight="872">
+    <screen xsi:type="model:WidgetGroup" href="assets/Android5/Devices/Nexus%206.screen#Nexus%206"/>
+  </widgets>
+  <widgets xsi:type="model:Master" id="2" x="61" y="128" measuredWidth="410" measuredHeight="56">
+    <screen xsi:type="model:WidgetGroup" href="assets/Android5/Navigation.screen#App%20Bar"/>
+    <overrides>
+      <widgetChanges xsi:type="o:Delete" ref="6"/>
+      <widgetChanges xsi:type="o:Delete" ref="3"/>
+      <widgetChanges xsi:type="o:Delete" ref="4"/>
+      <widgets ref="2" width="410"/>
+      <widgets ref="5" x="122" y="10" text="Shot Counter POC">
+        <font bold="true"/>
+      </widgets>
+    </overrides>
+  </widgets>
+  <widgets xsi:type="model:Button" id="11" x="181" y="344" height="63" text="LISTEN" measuredWidth="167" measuredHeight="63" background="#6aa84f">
+    <font size="48px"/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="12" x="79" y="167" measuredWidth="372" measuredHeight="128">
+    <widgets xsi:type="model:Label" id="13" x="84" text="1234" measuredWidth="202" measuredHeight="128">
+      <font size="90px"/>
+    </widgets>
+    <widgets xsi:type="model:Icon" id="14" x="315" y="43" width="57" height="53" measuredWidth="57" measuredHeight="53" icon="squared-plus (large)"/>
+    <widgets xsi:type="model:Icon" id="15" y="43" width="57" height="53" measuredWidth="57" measuredHeight="53" icon="squared-minus (custom)"/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="28" x="101" y="288" measuredWidth="328" measuredHeight="46">
+    <widgets xsi:type="model:ProgressBar" id="24" y="7" width="328" height="32" measuredWidth="328" measuredHeight="32" background="#999"/>
+    <widgets xsi:type="model:Label" id="25" x="129" text="75 dB" measuredWidth="81" measuredHeight="46">
+      <font size="28px" bold="true"/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:Button" id="29" x="181" y="416" width="167" text="RESET" measuredWidth="167" measuredHeight="42" background="#c00">
+    <font size="24px" bold="false"/>
+  </widgets>
+  <widgets xsi:type="model:Table" id="30" x="61" y="536" width="410" height="208" text="Shot Series Name,(w:30). Count,(w:30). &#xA;Shooting Session 2026-04-20,1234,%(color:CC0000){trash}%&#xA;My Range Session 2,10,%(color:CC0000){trash}%&#xA;My Second Range Session 1,20,%(color:CC0000){trash}%&#xA;My Range Session 1,5,%(color:CC0000){trash}%" measuredWidth="410" measuredHeight="208" alternative="#eee">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Button" id="31" x="203" y="499" width="124" height="35" text="Save Series" measuredWidth="124" measuredHeight="35" background="#666">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="32" x="103" y="470" text="Name" measuredWidth="39" measuredHeight="23">
+    <font bold="true"/>
+  </widgets>
+  <widgets xsi:type="model:TextField" id="33" x="142" y="470" width="246" text="Shooting Session 2026-05-07" measuredWidth="246" measuredHeight="23">
+    <font italic="true"/>
+  </widgets>
+  <widgets xsi:type="model:Panel" id="36" x="62" y="743" width="408" height="42" measuredWidth="408" measuredHeight="42" background="#93c47d" border="none"/>
+  <widgets xsi:type="model:WidgetGroup" id="37" x="179" y="737" measuredWidth="173" measuredHeight="53">
+    <widgets xsi:type="model:Label" id="34" y="12" text="Total Count" measuredWidth="84" measuredHeight="29">
+      <font size="16px"/>
+    </widgets>
+    <widgets xsi:type="model:Label" id="35" x="99" text="1269" measuredWidth="74" measuredHeight="53">
+      <font size="32px"/>
+    </widgets>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font size="12px"/>
+</model:Screen>

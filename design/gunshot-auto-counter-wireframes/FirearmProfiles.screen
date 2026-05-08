@@ -17,14 +17,14 @@
     </widgets>
     <widgets xsi:type="model:Icon" id="19" x="16" y="16" width="41" height="41" measuredWidth="41" measuredHeight="41" icon="add (large)"/>
   </widgets>
-  <widgets xsi:type="model:Icon" id="39" x="47" y="179" measuredWidth="32" measuredHeight="32" icon="filter (large)"/>
+  <widgets xsi:type="model:Icon" id="39" x="264" y="179" measuredWidth="32" measuredHeight="32" icon="filter (large)"/>
   <widgets xsi:type="model:Combo" id="40" x="264" y="180" text="Select Manufactuer" measuredWidth="160" measuredHeight="29">
     <font size="16px"/>
   </widgets>
-  <widgets xsi:type="model:Combo" id="41" x="88" y="214" width="160" text="Select Caliber" measuredWidth="160" measuredHeight="29">
+  <widgets xsi:type="model:Combo" id="41" x="264" y="214" width="160" text="Select Caliber" measuredWidth="160" measuredHeight="29">
     <font size="16px"/>
   </widgets>
-  <widgets xsi:type="model:Combo" id="42" x="88" y="180" width="160" text="Select Type" measuredWidth="160" measuredHeight="29">
+  <widgets xsi:type="model:Combo" id="42" x="264" y="180" width="160" text="Select Type" measuredWidth="160" measuredHeight="29">
     <font size="16px"/>
   </widgets>
   <widgets xsi:type="model:Icon" id="43" x="323" y="261" measuredWidth="32" measuredHeight="32" icon="desc (large)"/>

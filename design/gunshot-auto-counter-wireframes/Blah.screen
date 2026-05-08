@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore" xmlns:o="http://wireframesketcher.com/1.0/model/overrides">
+  <widgets xsi:type="model:Master" id="1" x="24" y="24" measuredWidth="456" measuredHeight="872">
+    <screen xsi:type="model:WidgetGroup" href="assets/Android5/Devices/Nexus%206.screen#Nexus%206"/>
+  </widgets>
+  <widgets xsi:type="model:Table" id="2" x="45" y="208" width="409" height="569" text="(align:center)(width:80).2026-03-04, Centerline,(width:60)(align:center).10,(align:center)(width:40).%(color:red){trash}%&#xD;&#xA;2026-03-12, Centerline,100,(align:center)(width:40).%(color:red){trash}%&#xD;&#xA;2026-03-19, Freedom Firearms,200,(align:center)(width:40).%(color:red){trash}%&#xD;&#xA;2026-03-27, Centerline,150,(align:center)(width:40).%(color:red){trash}%&#xD;&#xA;2026-03-31, Freedom Firearms,50,(align:center)(width:40).%(color:red){trash}%&#xD;&#xA;2026-04-06, 269 Sports Plaza,20,(align:center)(width:40).%(color:red){trash}%&#xD;&#xA;2026-04-11, Centerline,300,(align:center)(width:40).%(color:red){trash}%&#xD;&#xA;2026-04-18, Freedom Firearms,50,(align:center)(width:40).%(color:red){trash}%&#xD;&#xA;2026-04-22, 269 Sports Plaza,100,(align:center)(width:40).%(color:red){trash}%&#xD;&#xA;2026-04-25, Freedom Firearms,50,(align:center)(width:40).%(color:red){trash}%" measuredWidth="409" measuredHeight="569" rowHeight="39" alternative="#eee" header="false">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Panel" id="3" x="45" y="172" width="409" height="216" measuredWidth="409" measuredHeight="216"/>
+  <widgets xsi:type="model:WidgetGroup" id="4" x="359" y="694" measuredWidth="73" measuredHeight="73">
+    <widgets xsi:type="model:Shape" id="5" width="73" height="73" measuredWidth="73" measuredHeight="73" background="#3d85c6">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Icon" id="6" x="16" y="16" width="41" height="41" measuredWidth="41" measuredHeight="41" icon="add (large)"/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="7" x="46" y="347" measuredWidth="408" measuredHeight="41">
+    <widgets xsi:type="model:Panel" id="8" width="408" height="41" measuredWidth="408" measuredHeight="41" background="#ccc"/>
+    <widgets xsi:type="model:HSplitter" id="9" y="30" width="408" measuredWidth="408" measuredHeight="11"/>
+    <widgets xsi:type="model:Button" id="10" x="85" y="4" width="223" height="27" text="FILTERS" measuredWidth="223" measuredHeight="27" background="#3d85c6">
+      <font bold="true"/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:Combo" id="11" x="55" y="213" text="Select Ammo Profile" measuredWidth="135" measuredHeight="23">
+    <font size="12px"/>
+  </widgets>
+  <widgets xsi:type="model:Combo" id="12" x="55" y="243" width="160" text="Select Suppressor Profile" measuredWidth="160" measuredHeight="23">
+    <font size="12px"/>
+  </widgets>
+  <widgets xsi:type="model:Combo" id="13" x="55" y="186" width="160" text="Select Firearm Profile" measuredWidth="160" measuredHeight="23">
+    <font size="12px"/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="14" x="305" y="186" measuredWidth="132" measuredHeight="52">
+    <widgets xsi:type="model:WidgetGroup" id="15" measuredWidth="132" measuredHeight="24">
+      <widgets xsi:type="model:WidgetGroup" id="16" x="34" measuredWidth="98" measuredHeight="24">
+        <widgets xsi:type="model:Icon" id="17" x="74" measuredWidth="24" measuredHeight="24" icon="calendar2 (medium)"/>
+        <widgets xsi:type="model:TextField" id="18" y="1" text="01/01/2026" measuredWidth="69" measuredHeight="23">
+          <font size="12px" bold="false"/>
+        </widgets>
+      </widgets>
+      <widgets xsi:type="model:Label" id="19" text="From" measuredWidth="35" measuredHeight="23">
+        <font size="12px" bold="true"/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" id="20" x="16" y="28" measuredWidth="116" measuredHeight="24">
+      <widgets xsi:type="model:WidgetGroup" id="21" measuredWidth="116" measuredHeight="24">
+        <widgets xsi:type="model:WidgetGroup" id="22" x="18" measuredWidth="98" measuredHeight="24">
+          <widgets xsi:type="model:Icon" id="23" x="74" measuredWidth="24" measuredHeight="24" icon="calendar2 (medium)"/>
+          <widgets xsi:type="model:TextField" id="24" y="1" text="01/01/2026" measuredWidth="69" measuredHeight="23">
+            <font size="12px" bold="false"/>
+          </widgets>
+        </widgets>
+        <widgets xsi:type="model:Label" id="25" text="To" measuredWidth="19" measuredHeight="23">
+          <font size="12px" bold="true"/>
+        </widgets>
+      </widgets>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" id="26" x="45" y="125" measuredWidth="686" measuredHeight="59">
+    <widgets xsi:type="model:Master" id="27" width="410" measuredWidth="410" measuredHeight="50">
+      <screen xsi:type="model:WidgetGroup" href="assets/Android5/Navigation.screen#App%20Bar"/>
+      <overrides>
+        <widgetChanges xsi:type="o:Delete" ref="6"/>
+        <widgetChanges xsi:type="o:Delete" ref="3"/>
+        <widgets ref="2" width="410" height="50"/>
+        <widgets ref="4" y="13"/>
+        <widgets ref="5" y="9" text="Shooting Sessions"/>
+      </overrides>
+    </widgets>
+    <widgets xsi:type="model:Icon" id="28" x="327" y="9" measuredWidth="32" measuredHeight="32" icon="assets/cartridge-plus (large)"/>
+    <widgets xsi:type="model:Icon" id="29" x="286" y="9" measuredWidth="32" measuredHeight="32" icon="assets/pistol-plus (large)"/>
+    <widgets xsi:type="model:Icon" id="30" x="368" y="9" measuredWidth="32" measuredHeight="32" icon="assets/cartridge-plus (large)"/>
+    <widgets xsi:type="model:Icon" id="31" x="654" y="27" measuredWidth="32" measuredHeight="32" icon="assets/suppressor-plus (large)"/>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font size="12px"/>
+</model:Screen>

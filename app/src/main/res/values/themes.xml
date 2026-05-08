@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Main app theme (used after splash) -->
+    <style name="Theme.ShotCounterPoc" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <!-- Splash screen theme -->
+    <style name="Theme.ShotCounterPoc.Splash" parent="Theme.SplashScreen">
+        <!-- Background fills the whole screen -->
+        <item name="windowSplashScreenBackground">#0B3D6B</item>
+        <!-- The centered icon (160dp area) -->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>
+        <!-- Icon background circle color -->
+        <item name="windowSplashScreenIconBackgroundColor">#0B3D6B</item>
+        <!-- Theme to switch to after splash -->
+        <item name="postSplashScreenTheme">@style/Theme.ShotCounterPoc</item>
+    </style>
+
+</resources>

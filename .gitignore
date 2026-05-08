@@ -1,4 +1,49 @@
+# Existing project-specific ignores
 design/gunshot-auto-counter-wireframes/.project
 design/gunshot-auto-counter-wireframes/assets
 design/gunshot-auto-counter-wireframes/.settings
 *workspace.code-workspace
+
+# Gradle / Android build outputs
+.gradle/
+build/
+**/build/
+**/out/
+captures/
+
+# Local Android/Gradle config
+local.properties
+*.iml
+
+# Android Studio / IntelliJ
+.idea/
+!.idea/codeStyles/
+!.idea/codeStyles/Project.xml
+!.idea/inspectionProfiles/
+
+# VS Code workspace settings (optional to track; remove this line if desired)
+.vscode/
+
+# Logs / temp files
+*.log
+*.tmp
+*.temp
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Keystore / signing artifacts
+*.jks
+*.keystore
+*.pem
+*.p12
+*.der
+
+# Kotlin / Java compiled artifacts
+*.class
+
+# NDK / CMake intermediates
+.cxx/
+externalNativeBuild/
