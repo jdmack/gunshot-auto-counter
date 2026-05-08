@@ -61,9 +61,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.changedToUpIgnoreConsumed
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.boundsInRoot
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -109,8 +116,10 @@ fun ShotCounterPocApp(viewModel: ShotCounterViewModel = viewModel()) {
     var showDeleteAllDialog by remember { mutableStateOf(false) }
     var pendingDeleteId by remember { mutableStateOf<String?>(null) }
     var showHelpDialog by remember { mutableStateOf(false) }
+    var seriesNameFieldBounds by remember { mutableStateOf<Rect?>(null) }
     val isDarkTheme = isSystemInDarkTheme()
     val view = LocalView.current
+    val focusManager = LocalFocusManager.current
     val flashAlpha = remember { Animatable(0f) }
 
     val navigationBarColor = if (isDarkTheme) Color(0xFF0F2740) else Color(0xFFD6E8FF)
@@ -145,7 +154,22 @@ fun ShotCounterPocApp(viewModel: ShotCounterViewModel = viewModel()) {
 
     MaterialTheme(colorScheme = if (isDarkTheme) AppBlueDarkScheme else AppBlueLightScheme) {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-            Box(modifier = Modifier.fillMaxSize()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .pointerInput(seriesNameFieldBounds) {
+                        awaitPointerEventScope {
+                            while (true) {
+                                val event = awaitPointerEvent(PointerEventPass.Final)
+                                val tapUp = event.changes.firstOrNull { it.changedToUpIgnoreConsumed() } ?: continue
+                                val bounds = seriesNameFieldBounds ?: continue
+                                if (!bounds.contains(tapUp.position)) {
+                                    focusManager.clearFocus(force = true)
+                                }
+                            }
+                        }
+                    }
+            ) {
                 Scaffold(
                     topBar = {
                         TopAppBar(
@@ -263,6 +287,7 @@ fun ShotCounterPocApp(viewModel: ShotCounterViewModel = viewModel()) {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 4.dp)
+                                .onGloballyPositioned { seriesNameFieldBounds = it.boundsInRoot() }
                                 .onFocusChanged {
                                     if (it.isFocused) {
                                         viewModel.onSeriesNameFocused()
