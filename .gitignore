@@ -10,6 +10,8 @@ build/
 **/build/
 **/out/
 captures/
+release/
+debug/
 
 # Local Android/Gradle config
 local.properties

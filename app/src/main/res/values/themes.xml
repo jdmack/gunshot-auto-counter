@@ -9,7 +9,7 @@
         <!-- Background fills the whole screen -->
         <item name="windowSplashScreenBackground">#0B3D6B</item>
         <!-- The centered icon (160dp area) -->
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_icon</item>
         <!-- Icon background circle color -->
         <item name="windowSplashScreenIconBackgroundColor">#0B3D6B</item>
         <!-- Theme to switch to after splash -->

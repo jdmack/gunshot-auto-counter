@@ -82,6 +82,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.graphics.toArgb
+import com.james.shotcounterpoc.BuildConfig
 
 private val AppBlueLightScheme = lightColorScheme(
     primary = Color(0xFF1565C0),
@@ -112,6 +113,7 @@ fun ShotCounterPocApp(viewModel: ShotCounterViewModel = viewModel()) {
 
     val calibrationSuggestion = viewModel.currentCalibrationSuggestion()
     val context = LocalContext.current
+    val appVersionLabel = "v${BuildConfig.VERSION_NAME}"
 
     var showDeleteAllDialog by remember { mutableStateOf(false) }
     var pendingDeleteId by remember { mutableStateOf<String?>(null) }
@@ -178,6 +180,12 @@ fun ShotCounterPocApp(viewModel: ShotCounterViewModel = viewModel()) {
                                 containerColor = Color(0xFF0B3D6B)
                             ),
                             actions = {
+                                Text(
+                                    text = appVersionLabel,
+                                    color = Color.White,
+                                    fontSize = 12.sp,
+                                    modifier = Modifier.padding(end = 6.dp)
+                                )
                                 IconButton(onClick = { showHelpDialog = true }) {
                                     Icon(
                                         imageVector = Icons.Default.Help,
@@ -363,16 +371,25 @@ fun ShotCounterPocApp(viewModel: ShotCounterViewModel = viewModel()) {
                 textContentColor = MaterialTheme.colorScheme.onSurface,
                 title = { Text("How to use") },
                 text = {
-                    Text(
-                        "1. Press Listen to start mic monitoring.\n" +
-                        "2. Shots above the threshold are counted automatically. Use +/- to correct.\n" +
-                        "3. Press Save Series when a string of fire is done — it saves the count and resets to 0.\n\n" +
-                        "Calibration:\n" +
-                        "• Shot Threshold — how loud a sound must be to count as a shot.\n" +
-                        "• Rearm Threshold — how quiet it must get before the next shot can register (prevents echo double-counting).\n" +
-                        "• Min Shot Gap — minimum time (ms) between two shots.\n" +
-                        "• Use Test Mode to fire real shots and let the app suggest ideal thresholds."
-                    )
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(
+                            "1. Press Listen to start mic monitoring.\n" +
+                            "2. Shots above the threshold are counted automatically. Use +/- to correct.\n" +
+                            "3. Press Save Series when a string of fire is done — it saves the count and resets to 0.\n\n" +
+                            "Calibration:\n" +
+                            "• Shot Threshold — how loud a sound must be to count as a shot.\n" +
+                            "• Rearm Threshold — how quiet it must get before the next shot can register (prevents echo double-counting).\n" +
+                            "• Min Shot Gap — minimum time (ms) between two shots.\n" +
+                            "• Use Test Mode to fire real shots and let the app suggest ideal thresholds."
+                        )
+                        Text(
+                            text = "Version ${BuildConfig.VERSION_NAME}",
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.End,
+                            fontSize = 12.sp,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
+                        )
+                    }
                 },
                 confirmButton = {
                     Button(

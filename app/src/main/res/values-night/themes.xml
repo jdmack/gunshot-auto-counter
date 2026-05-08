@@ -4,7 +4,7 @@
     <!-- Splash screen theme (dark variant) -->
     <style name="Theme.ShotCounterPoc.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">#071E33</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_icon</item>
         <item name="windowSplashScreenIconBackgroundColor">#071E33</item>
         <item name="postSplashScreenTheme">@style/Theme.ShotCounterPoc</item>
     </style>

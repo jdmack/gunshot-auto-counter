@@ -1,3 +1,7 @@
+<p align="center">
+	<img src="assets/app/app_icon.png" alt="Shot Counter app icon" width="140" />
+</p>
+
 # Shot Counter POC
 
 Shot Counter POC is an Android app for counting gunshots in real time using microphone input, with on-range calibration controls (thresholds and shot gap), test mode tuning, and persistent shot-series tracking.
