@@ -98,7 +98,7 @@ Android project root: `app/`
 
 ## Changelog
 
-### Latest Session (May 13, 2026)
+### v0.2.0
 
 #### Core Improvements
 - **Dynamic peak sensitivity:** Peak confirmation threshold now scales with display range (4% of y-axis span) instead of fixed 1.2 dB, eliminating false peak clusters during sound decay.
