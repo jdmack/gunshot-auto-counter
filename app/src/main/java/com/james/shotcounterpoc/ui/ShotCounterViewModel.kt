@@ -4,7 +4,14 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.media.AudioFormat
 import android.media.AudioRecord
+import android.media.MediaPlayer
 import android.media.MediaRecorder
+import com.james.shotcounterpoc.audio.CircularShortBuffer
+import com.james.shotcounterpoc.audio.WavWriter
+import com.james.shotcounterpoc.data.AppDatabase
+import com.james.shotcounterpoc.data.ShotEventEntity
+import com.james.shotcounterpoc.data.ShotSeriesEntity
+import com.james.shotcounterpoc.data.ShotSeriesWithEvents
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -14,29 +21,44 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.File
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.UUID
+import kotlin.math.abs
 import kotlin.math.log10
 import kotlin.math.max
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
+data class ShotEvent(
+    val id: String,
+    val shotSeriesId: String?,
+    val detectedAtMillis: Long,
+    val confidence: Float,
+    val peakDb: Float,
+    val audioClipPath: String? = null
+)
+
 data class ShotSeries(
     val id: String,
     val name: String,
-    val count: Int,
-    val createdAtMillis: Long
+    val recordedRoundCount: Int,
+    val createdAtMillis: Long,
+    val shots: List<ShotEvent> = emptyList()
 )
 
 data class ShotCounterUiState(
     val currentCount: Int = 0,
     val displayedDb: Float = 80f,
     val liveDb: Float = 80f,
+    val lastPeakDb: Float? = null,
     val lastShotDb: Float? = null,
     val shotFlashTriggerMs: Long = 0L,
     val isListening: Boolean = false,
@@ -46,17 +68,43 @@ data class ShotCounterUiState(
     val isCalibrationTestMode: Boolean = false,
     val calibrationTestShotPeaks: List<Float> = emptyList(),
     val calibrationTestIntervalsMs: List<Long> = emptyList(),
+    val dbHistory: List<Float> = emptyList(),
+    val dbMarkerHistory: List<Int> = emptyList(),
+    val displayMinDb: Float = 80f,
+    val displayMaxDb: Float = 180f,
+    val barDecayMsPerDb: Float = 100f,
+    val isCounterExpanded: Boolean = true,
+    val isSoundLevelsExpanded: Boolean = true,
+    val isCalibrationExpanded: Boolean = false,
+    val isShotSeriesExpanded: Boolean = true,
     val seriesNameInput: String = "",
-    val shotSeries: List<ShotSeries> = emptyList()
+    val inProgressShotEvents: List<ShotEvent> = emptyList(),
+    val shotSeries: List<ShotSeries> = emptyList(),
+    val playingClipId: String? = null
 ) {
-    val totalSavedCount: Int = shotSeries.sumOf { it.count }
+    val totalSavedCount: Int = shotSeries.sumOf { it.recordedRoundCount }
 }
 
 class ShotCounterViewModel(application: Application) : AndroidViewModel(application) {
+    companion object {
+        const val GRAPH_MARKER_PEAK = 1
+        const val GRAPH_MARKER_SHOT = 1 shl 1
+    }
+
     private val prefs = application.getSharedPreferences("shot_counter_poc", 0)
+    private val database = AppDatabase.get(application)
 
     private val meterMinDb = 80f
     private val meterMaxDb = 180f
+    private val sampleRate = 44_100
+    // Peak drop threshold is computed dynamically as a fraction of the display range (see updatePeakTracking)
+    private val peakDropConfirmFraction = 0.04f // 4% of display range drop required to confirm a peak
+    private val peakSmoothingAlpha = 0.25f
+    private val historyLimit = 240
+
+    // Audio clip window: 300 ms pre-trigger + 700 ms post-trigger = 1 s total
+    private val preTriggerMs = 300
+    private val postTriggerMs = 700
 
     private val defaultShotThresholdDb = 110f
     private val defaultRearmThresholdDb = 95f
@@ -65,16 +113,31 @@ class ShotCounterViewModel(application: Application) : AndroidViewModel(applicat
     private val keyShotThresholdDb = "cal_shot_threshold_db"
     private val keyRearmThresholdDb = "cal_rearm_threshold_db"
     private val keyMinShotGapMs = "cal_min_shot_gap_ms"
+    private val keyDisplayMinDb = "display_min_db"
+    private val keyDisplayMaxDb = "display_max_db"
+    private val keyBarDecayMsPerDb = "bar_decay_ms_per_db"
+    private val keyCounterExpanded = "counter_expanded"
+    private val keySoundLevelsExpanded = "sound_levels_expanded"
+    private val keyCalibrationExpanded = "calibration_expanded"
+    private val keyShotSeriesExpanded = "shot_series_expanded"
 
     private val calibration = loadCalibration()
+    private val displaySettings = loadDisplaySettings()
+    private val sectionExpansion = loadSectionExpansion()
 
     private val _uiState = MutableStateFlow(
         ShotCounterUiState(
             shotThresholdDb = calibration.shotThresholdDb,
             rearmThresholdDb = calibration.rearmThresholdDb,
             minShotGapMs = calibration.minShotGapMs,
-            seriesNameInput = defaultSeriesName(),
-            shotSeries = loadSeriesFromStorage()
+            displayMinDb = displaySettings.displayMinDb,
+            displayMaxDb = displaySettings.displayMaxDb,
+            barDecayMsPerDb = displaySettings.barDecayMsPerDb,
+            isCounterExpanded = sectionExpansion.isCounterExpanded,
+            isSoundLevelsExpanded = sectionExpansion.isSoundLevelsExpanded,
+            isCalibrationExpanded = sectionExpansion.isCalibrationExpanded,
+            isShotSeriesExpanded = sectionExpansion.isShotSeriesExpanded,
+            seriesNameInput = defaultSeriesName()
         )
     )
     val uiState: StateFlow<ShotCounterUiState> = _uiState.asStateFlow()
@@ -82,9 +145,18 @@ class ShotCounterViewModel(application: Application) : AndroidViewModel(applicat
     private var listenJob: Job? = null
     private var audioRecord: AudioRecord? = null
     private var clearLastShotJob: Job? = null
+    private var mediaPlayer: MediaPlayer? = null
 
     private var shotArmed = true
     private var lastShotEpochMs = 0L
+    private var peakSmoothedDb = displaySettings.displayMinDb
+    private var peakCandidateDb: Float? = null
+    private var peakCandidateSampleNumber = 0L
+    private var currentSampleNumber = 0L
+    private var peakTrackingInitialized = false
+    private var peakRearmed = true          // false after a peak is confirmed, until level drops then rises
+    private var peakMinAfterConfirm = Float.MAX_VALUE  // minimum dB seen since last peak confirmation
+    private var lastDbUpdateEpochMs = 0L
 
     private val testModePeakLimit = 30
 
@@ -96,6 +168,27 @@ class ShotCounterViewModel(application: Application) : AndroidViewModel(applicat
         val minShotGapMs: Int
     )
 
+    init {
+        viewModelScope.launch(Dispatchers.IO) {
+            val entries = database.dao().getAllWithEvents()
+            val series = if (entries.isEmpty()) {
+                val migrated = loadSeriesFromSharedPrefs()
+                if (migrated.isNotEmpty()) {
+                    migrated.forEach { s ->
+                        database.dao().insertSeries(s.toEntity())
+                        database.dao().insertEvents(s.shots.map { it.toEntity(s.id) })
+                    }
+                    database.dao().getAllWithEvents().map { it.toDomain() }
+                } else {
+                    emptyList()
+                }
+            } else {
+                entries.map { it.toDomain() }
+            }
+            _uiState.update { it.copy(shotSeries = series, seriesNameInput = defaultSeriesName()) }
+        }
+    }
+
     fun incrementManually() {
         _uiState.update { it.copy(currentCount = it.currentCount + 1) }
     }
@@ -104,8 +197,41 @@ class ShotCounterViewModel(application: Application) : AndroidViewModel(applicat
         _uiState.update { it.copy(currentCount = max(0, it.currentCount - 1)) }
     }
 
-    fun resetCurrentCount() {
-        _uiState.update { it.copy(currentCount = 0) }
+    data class SectionExpansionSettings(
+        val isCounterExpanded: Boolean,
+        val isSoundLevelsExpanded: Boolean,
+        val isCalibrationExpanded: Boolean,
+        val isShotSeriesExpanded: Boolean
+    )
+
+    fun discardCurrentSeries() {
+        _uiState.update {
+            it.copy(
+                currentCount = 0,
+                seriesNameInput = defaultSeriesName(),
+                inProgressShotEvents = emptyList()
+            )
+        }
+    }
+
+    fun setCounterExpanded(expanded: Boolean) {
+        _uiState.update { it.copy(isCounterExpanded = expanded) }
+        prefs.edit().putBoolean(keyCounterExpanded, expanded).apply()
+    }
+
+    fun setSoundLevelsExpanded(expanded: Boolean) {
+        _uiState.update { it.copy(isSoundLevelsExpanded = expanded) }
+        prefs.edit().putBoolean(keySoundLevelsExpanded, expanded).apply()
+    }
+
+    fun setCalibrationExpanded(expanded: Boolean) {
+        _uiState.update { it.copy(isCalibrationExpanded = expanded) }
+        prefs.edit().putBoolean(keyCalibrationExpanded, expanded).apply()
+    }
+
+    fun setShotSeriesExpanded(expanded: Boolean) {
+        _uiState.update { it.copy(isShotSeriesExpanded = expanded) }
+        prefs.edit().putBoolean(keyShotSeriesExpanded, expanded).apply()
     }
 
     fun updateSeriesNameInput(value: String) {
@@ -134,61 +260,94 @@ class ShotCounterViewModel(application: Application) : AndroidViewModel(applicat
 
     fun saveSeries() {
         val snapshot = _uiState.value
+        if (snapshot.currentCount <= 0) return
         val name = snapshot.seriesNameInput.ifBlank { defaultSeriesName() }
+        val seriesId = UUID.randomUUID().toString()
+        val shots = snapshot.inProgressShotEvents.map { it.copy(shotSeriesId = seriesId) }
         val created = ShotSeries(
-            id = UUID.randomUUID().toString(),
+            id = seriesId,
             name = name,
-            count = snapshot.currentCount,
-            createdAtMillis = System.currentTimeMillis()
+            recordedRoundCount = snapshot.currentCount,
+            createdAtMillis = System.currentTimeMillis(),
+            shots = shots
         )
-
         val updated = listOf(created) + snapshot.shotSeries
         _uiState.update {
             it.copy(
                 currentCount = 0,
                 seriesNameInput = defaultSeriesName(),
+                inProgressShotEvents = emptyList(),
                 shotSeries = updated
             )
         }
-        persistSeries(updated)
+        viewModelScope.launch(Dispatchers.IO) {
+            database.dao().insertSeries(created.toEntity())
+            if (shots.isNotEmpty()) {
+                database.dao().insertEvents(shots.map { it.toEntity(seriesId) })
+            }
+        }
     }
 
     fun saveInProgressWithDefaultName() {
         val snapshot = _uiState.value
         if (snapshot.currentCount <= 0) return
-
+        val seriesId = UUID.randomUUID().toString()
+        val shots = snapshot.inProgressShotEvents.map { it.copy(shotSeriesId = seriesId) }
         val created = ShotSeries(
-            id = UUID.randomUUID().toString(),
+            id = seriesId,
             name = defaultSeriesName(),
-            count = snapshot.currentCount,
-            createdAtMillis = System.currentTimeMillis()
+            recordedRoundCount = snapshot.currentCount,
+            createdAtMillis = System.currentTimeMillis(),
+            shots = shots
         )
         val updated = listOf(created) + snapshot.shotSeries
         _uiState.update {
             it.copy(
                 currentCount = 0,
                 seriesNameInput = defaultSeriesName(),
+                inProgressShotEvents = emptyList(),
                 shotSeries = updated
             )
         }
-        persistSeries(updated)
+        viewModelScope.launch(Dispatchers.IO) {
+            database.dao().insertSeries(created.toEntity())
+            if (shots.isNotEmpty()) {
+                database.dao().insertEvents(shots.map { it.toEntity(seriesId) })
+            }
+        }
     }
 
     fun deleteSeries(id: String) {
         val updated = _uiState.value.shotSeries.filterNot { it.id == id }
         _uiState.update { it.copy(shotSeries = updated) }
-        persistSeries(updated)
+        viewModelScope.launch(Dispatchers.IO) {
+            val clipPaths = database.dao().getClipPathsForSeries(id)
+            database.dao().deleteSeries(id)
+            clipPaths.forEach { File(it).delete() }
+        }
     }
 
     fun deleteAllSeries() {
         _uiState.update { it.copy(shotSeries = emptyList()) }
-        persistSeries(emptyList())
+        viewModelScope.launch(Dispatchers.IO) {
+            val clipPaths = database.dao().getAllClipPaths()
+            database.dao().deleteAll()
+            clipPaths.forEach { File(it).delete() }
+        }
+    }
+
+    fun exportShotSeriesJson(): String {
+        val array = JSONArray()
+        _uiState.value.shotSeries.forEach { series ->
+            array.put(series.toJsonObject())
+        }
+        return array.toString(2)
     }
 
     fun updateShotThresholdDb(value: Float) {
         _uiState.update { state ->
-            val newShot = value.coerceIn(90f, meterMaxDb)
-            val newRearm = state.rearmThresholdDb.coerceIn(meterMinDb, newShot - 1f)
+            val newShot = value.coerceIn(1f, meterMaxDb)
+            val newRearm = state.rearmThresholdDb.coerceIn(0f, newShot - 1f)
             state.copy(shotThresholdDb = newShot, rearmThresholdDb = newRearm)
         }
         persistCalibrationFromState()
@@ -196,7 +355,7 @@ class ShotCounterViewModel(application: Application) : AndroidViewModel(applicat
 
     fun updateRearmThresholdDb(value: Float) {
         _uiState.update { state ->
-            val newRearm = value.coerceIn(meterMinDb, state.shotThresholdDb - 1f)
+            val newRearm = value.coerceIn(0f, state.shotThresholdDb - 1f)
             state.copy(rearmThresholdDb = newRearm)
         }
         persistCalibrationFromState()
@@ -267,7 +426,6 @@ class ShotCounterViewModel(application: Application) : AndroidViewModel(applicat
     fun startListening() {
         if (_uiState.value.isListening) return
 
-        val sampleRate = 44_100
         val minBuffer = AudioRecord.getMinBufferSize(
             sampleRate,
             AudioFormat.CHANNEL_IN_MONO,
@@ -280,7 +438,7 @@ class ShotCounterViewModel(application: Application) : AndroidViewModel(applicat
             sampleRate,
             AudioFormat.CHANNEL_IN_MONO,
             AudioFormat.ENCODING_PCM_16BIT,
-            minBuffer * 2
+            minBuffer * 4
         )
         if (record.state != AudioRecord.STATE_INITIALIZED) {
             record.release()
@@ -288,18 +446,76 @@ class ShotCounterViewModel(application: Application) : AndroidViewModel(applicat
         }
 
         shotArmed = true
+        peakSmoothedDb = _uiState.value.displayMinDb
+        peakCandidateDb = null
+        peakCandidateSampleNumber = 0L
+        currentSampleNumber = 0L
+        peakTrackingInitialized = false
+        peakRearmed = true
+        peakMinAfterConfirm = Float.MAX_VALUE
+        lastDbUpdateEpochMs = System.currentTimeMillis()
         audioRecord = record
-        _uiState.update { it.copy(isListening = true, liveDb = meterMinDb, displayedDb = meterMinDb) }
+        _uiState.update {
+            it.copy(
+                isListening = true,
+                liveDb = it.displayMinDb,
+                displayedDb = it.displayMinDb,
+                lastPeakDb = null,
+                dbHistory = emptyList(),
+                dbMarkerHistory = emptyList()
+            )
+        }
+
+        val preTriggerSamples = preTriggerMs * sampleRate / 1000
+        val postTriggerSamples = postTriggerMs * sampleRate / 1000
 
         listenJob = viewModelScope.launch(Dispatchers.Default) {
+            val ringBuffer = CircularShortBuffer(preTriggerSamples)
             val buffer = ShortArray(minBuffer)
+            var preTriggerSnapshot: ShortArray? = null
+            var postTriggerBuf: ShortArray? = null
+            var postTriggerRemaining = 0
+            var pendingClipEvent: ShotEvent? = null
+
             record.startRecording()
-            while (true) {
+            while (isActive) {
                 val read = record.read(buffer, 0, buffer.size)
                 if (read <= 0) continue
 
+                ringBuffer.write(buffer, read)
+
+                if (postTriggerRemaining > 0) {
+                    val toCopy = minOf(read, postTriggerRemaining)
+                    val offset = postTriggerSamples - postTriggerRemaining
+                    val currentPostTriggerBuf = postTriggerBuf
+                    if (currentPostTriggerBuf != null) {
+                        System.arraycopy(buffer, 0, currentPostTriggerBuf, offset, toCopy)
+                    }
+                    postTriggerRemaining -= toCopy
+
+                    if (postTriggerRemaining <= 0) {
+                        val pre = preTriggerSnapshot
+                        val post = postTriggerBuf
+                        val event = pendingClipEvent
+                        if (pre != null && post != null && event != null) {
+                            val combined = pre + post
+                            launch(Dispatchers.IO) { saveClip(event, combined) }
+                        }
+                        preTriggerSnapshot = null
+                        postTriggerBuf = null
+                        pendingClipEvent = null
+                    }
+                }
+
                 val db = estimateDb(buffer, read).coerceIn(meterMinDb, meterMaxDb)
-                applyDbSmoothingAndDetection(db)
+                val firedEvent = applyDbSmoothingAndDetection(db)
+
+                if (firedEvent != null && postTriggerRemaining <= 0) {
+                    preTriggerSnapshot = ringBuffer.snapshot()
+                    postTriggerBuf = ShortArray(postTriggerSamples)
+                    postTriggerRemaining = postTriggerSamples
+                    pendingClipEvent = firedEvent
+                }
             }
         }
     }
@@ -317,41 +533,110 @@ class ShotCounterViewModel(application: Application) : AndroidViewModel(applicat
             it.release()
         }
         audioRecord = null
-        _uiState.update { it.copy(isListening = false, liveDb = meterMinDb, displayedDb = meterMinDb) }
+        val displayMin = _uiState.value.displayMinDb
+        _uiState.update { it.copy(isListening = false, liveDb = displayMin, displayedDb = displayMin) }
     }
 
     override fun onCleared() {
         stopListening()
+        stopClip()
         super.onCleared()
     }
 
-    private fun applyDbSmoothingAndDetection(db: Float) {
+    private fun saveClip(event: ShotEvent, samples: ShortArray) {
+        val clipsDir = File(getApplication<Application>().filesDir, "clips")
+        clipsDir.mkdirs()
+        val file = File(clipsDir, "${event.id}.wav")
+        try {
+            WavWriter.write(file, sampleRate, samples)
+        } catch (_: Exception) {
+            return
+        }
+        val path = file.absolutePath
+        viewModelScope.launch(Dispatchers.IO) {
+            database.dao().updateClipPath(event.id, path)
+        }
+        _uiState.update { state ->
+            state.copy(
+                inProgressShotEvents = state.inProgressShotEvents.map {
+                    if (it.id == event.id) it.copy(audioClipPath = path) else it
+                },
+                shotSeries = state.shotSeries.map { series ->
+                    series.copy(shots = series.shots.map { shot ->
+                        if (shot.id == event.id) shot.copy(audioClipPath = path) else shot
+                    })
+                }
+            )
+        }
+    }
+
+    fun playClip(event: ShotEvent) {
+        val path = event.audioClipPath ?: return
+        stopClip()
+        val player = MediaPlayer()
+        try {
+            player.setDataSource(path)
+            player.prepare()
+            player.setOnCompletionListener {
+                _uiState.update { s -> s.copy(playingClipId = null) }
+                it.release()
+                if (mediaPlayer == it) mediaPlayer = null
+            }
+            player.start()
+            mediaPlayer = player
+            _uiState.update { it.copy(playingClipId = event.id) }
+        } catch (_: Exception) {
+            player.release()
+        }
+    }
+
+    fun stopClip() {
+        mediaPlayer?.apply {
+            try {
+                stop()
+            } catch (_: Exception) {
+                // No-op
+            }
+            release()
+        }
+        mediaPlayer = null
+        _uiState.update { it.copy(playingClipId = null) }
+    }
+
+    private fun applyDbSmoothingAndDetection(db: Float): ShotEvent? {
         val now = System.currentTimeMillis()
         val thresholds = _uiState.value
+        val elapsedMs = if (lastDbUpdateEpochMs > 0L) (now - lastDbUpdateEpochMs).coerceAtLeast(0L) else 0L
+        lastDbUpdateEpochMs = now
 
-        _uiState.update { state ->
-            val smoothed = if (db >= state.displayedDb) {
-                db
-            } else {
-                max(db, state.displayedDb - 1.6f)
-            }
-            state.copy(liveDb = db, displayedDb = smoothed)
+        val decayAmount = if (thresholds.barDecayMsPerDb <= 0f) 0f else elapsedMs / thresholds.barDecayMsPerDb
+        val decayed = thresholds.displayedDb - decayAmount
+        val smoothed = if (db >= decayed) {
+            db
+        } else {
+            max(db, decayed)
         }
+        val clampedSmoothed = smoothed.coerceIn(thresholds.displayMinDb, thresholds.displayMaxDb)
+        val sampleNumber = currentSampleNumber++
+
+        val confirmedPeak = updatePeakTracking(db, clampedSmoothed, sampleNumber)
 
         if (!shotArmed && db < thresholds.rearmThresholdDb) {
             shotArmed = true
         }
 
+        var shotEvent: ShotEvent? = null
+
         if (shotArmed && db >= thresholds.shotThresholdDb && now - lastShotEpochMs >= thresholds.minShotGapMs.toLong()) {
             shotArmed = false
             lastShotEpochMs = now
-            _uiState.update {
-                it.copy(
-                    currentCount = it.currentCount + 1,
-                    lastShotDb = db,
-                    shotFlashTriggerMs = now
-                )
-            }
+            shotEvent = ShotEvent(
+                id = UUID.randomUUID().toString(),
+                shotSeriesId = null,
+                detectedAtMillis = now,
+                confidence = calculateShotConfidence(db, thresholds.shotThresholdDb),
+                peakDb = db
+            )
 
             recordCalibrationTestShotIfEnabled(db, now)
 
@@ -363,6 +648,90 @@ class ShotCounterViewModel(application: Application) : AndroidViewModel(applicat
                 }
             }
         }
+
+        _uiState.update { state ->
+            val updatedHistory = (state.dbHistory + clampedSmoothed).takeLast(historyLimit)
+            val updatedMarkers = ((state.dbMarkerHistory + if (shotEvent != null) GRAPH_MARKER_SHOT else 0).takeLast(historyLimit)).toMutableList()
+
+            confirmedPeak?.let { peakConfirmation ->
+                val samplesAgo = sampleNumber - peakConfirmation.sampleNumber
+                val markerIndex = updatedMarkers.lastIndex - samplesAgo.toInt()
+                if (markerIndex in updatedMarkers.indices) {
+                    updatedMarkers[markerIndex] = updatedMarkers[markerIndex] or GRAPH_MARKER_PEAK
+                }
+            }
+
+            state.copy(
+                liveDb = db,
+                displayedDb = clampedSmoothed,
+                lastPeakDb = confirmedPeak?.value ?: state.lastPeakDb,
+                currentCount = state.currentCount + if (shotEvent != null) 1 else 0,
+                inProgressShotEvents = if (shotEvent != null) state.inProgressShotEvents + shotEvent else state.inProgressShotEvents,
+                lastShotDb = if (shotEvent != null) db else state.lastShotDb,
+                shotFlashTriggerMs = if (shotEvent != null) now else state.shotFlashTriggerMs,
+                dbHistory = updatedHistory,
+                dbMarkerHistory = updatedMarkers
+            )
+        }
+
+        return shotEvent
+    }
+
+    private data class PeakConfirmation(
+        val value: Float,
+        val sampleNumber: Long
+    )
+
+    private fun updatePeakTracking(rawDb: Float, smoothedDb: Float, sampleNumber: Long): PeakConfirmation? {
+        val displayRange = _uiState.value.displayMaxDb - _uiState.value.displayMinDb
+        val peakDropConfirmDb = displayRange * peakDropConfirmFraction
+
+        peakSmoothedDb += (smoothedDb - peakSmoothedDb) * peakSmoothingAlpha
+        val peakInput = max(rawDb, peakSmoothedDb)
+
+        if (!peakTrackingInitialized) {
+            peakTrackingInitialized = true
+            return null
+        }
+
+        // Re-arm: after a peak is confirmed, wait for the level to drop then rise by
+        // peakDropConfirmDb before allowing a new peak candidate to start.
+        if (!peakRearmed) {
+            if (peakInput < peakMinAfterConfirm) peakMinAfterConfirm = peakInput
+            if (peakInput - peakMinAfterConfirm >= peakDropConfirmDb) {
+                peakRearmed = true
+                peakMinAfterConfirm = Float.MAX_VALUE
+            } else {
+                return null
+            }
+        }
+
+        if (peakCandidateDb == null) {
+            peakCandidateDb = peakInput
+            peakCandidateSampleNumber = sampleNumber
+            return null
+        }
+
+        val candidate = peakCandidateDb ?: peakInput
+        if (peakInput >= candidate) {
+            peakCandidateDb = peakInput
+            peakCandidateSampleNumber = sampleNumber
+            return null
+        }
+
+        if (candidate - peakInput >= peakDropConfirmDb) {
+            val confirmedPeak = PeakConfirmation(
+                value = candidate,
+                sampleNumber = peakCandidateSampleNumber
+            )
+            peakCandidateDb = null
+            peakCandidateSampleNumber = 0L
+            peakRearmed = false
+            peakMinAfterConfirm = peakInput
+            return confirmedPeak
+        }
+
+        return null
     }
 
     private fun recordCalibrationTestShotIfEnabled(db: Float, epochMs: Long) {
@@ -477,21 +846,61 @@ class ShotCounterViewModel(application: Application) : AndroidViewModel(applicat
         return "Shot Series $datePart $timePart"
     }
 
-    private fun persistSeries(series: List<ShotSeries>) {
-        val array = JSONArray()
-        series.forEach { row ->
-            array.put(
-                JSONObject()
-                    .put("id", row.id)
-                    .put("name", row.name)
-                    .put("count", row.count)
-                    .put("createdAtMillis", row.createdAtMillis)
-            )
-        }
-        prefs.edit().putString("shot_series", array.toString()).apply()
+    private fun calculateShotConfidence(db: Float, thresholdDb: Float): Float {
+        return ((db - thresholdDb + 3f) / 15f).coerceIn(0.05f, 1f)
     }
 
-    private fun loadSeriesFromStorage(): List<ShotSeries> {
+    private fun Long.toIsoUtcString(): String {
+        return Instant.ofEpochMilli(this).toString()
+    }
+
+    private fun ShotEvent.toJsonObject(): JSONObject {
+        return JSONObject()
+            .put("id", id)
+            .put("shot_series_id", shotSeriesId)
+            .put("detected_at", detectedAtMillis.toIsoUtcString())
+            .put("confidence", confidence)
+            .put("peak_db", peakDb)
+            .put("audio_clip_path", audioClipPath)
+    }
+
+    private fun ShotSeries.toJsonObject(): JSONObject {
+        val shotsArray = JSONArray()
+        shots.forEach { shot ->
+            shotsArray.put(shot.toJsonObject())
+        }
+
+        return JSONObject()
+            .put("id", id)
+            .put("name", name)
+            .put("recorded_round_count", recordedRoundCount)
+            .put("created_at", createdAtMillis.toIsoUtcString())
+            .put("shots", shotsArray)
+    }
+
+    private fun ShotSeries.toEntity() = ShotSeriesEntity(id, name, recordedRoundCount, createdAtMillis)
+
+    private fun ShotEvent.toEntity(seriesId: String) =
+        ShotEventEntity(id, seriesId, detectedAtMillis, confidence, peakDb, audioClipPath)
+
+    private fun ShotSeriesWithEvents.toDomain() = ShotSeries(
+        id = series.id,
+        name = series.name,
+        recordedRoundCount = series.recordedRoundCount,
+        createdAtMillis = series.createdAtMillis,
+        shots = shots.map { it.toDomain(series.id) }
+    )
+
+    private fun ShotEventEntity.toDomain(seriesId: String) = ShotEvent(
+        id = id,
+        shotSeriesId = seriesId,
+        detectedAtMillis = detectedAtMillis,
+        confidence = confidence,
+        peakDb = peakDb,
+        audioClipPath = audioClipPath
+    )
+
+    private fun loadSeriesFromSharedPrefs(): List<ShotSeries> {
         val raw = prefs.getString("shot_series", null) ?: return emptyList()
         return try {
             val array = JSONArray(raw)
@@ -502,14 +911,43 @@ class ShotCounterViewModel(application: Application) : AndroidViewModel(applicat
                         ShotSeries(
                             id = item.optString("id", UUID.randomUUID().toString()),
                             name = item.optString("name", defaultSeriesName()),
-                            count = item.optInt("count", 0),
-                            createdAtMillis = item.optLong("createdAtMillis", 0L)
+                            recordedRoundCount = item.optInt(
+                                "recorded_round_count",
+                                item.optInt("recordedRoundCount", item.optInt("count", 0))
+                            ),
+                            createdAtMillis = item.optLong("createdAtMillis", 0L),
+                            shots = item.optJSONArray("shots").toShotEvents()
                         )
                     )
                 }
             }.sortedByDescending { it.createdAtMillis }
         } catch (_: Exception) {
             emptyList()
+        }
+    }
+
+    private fun JSONArray?.toShotEvents(): List<ShotEvent> {
+        if (this == null) return emptyList()
+
+        return buildList {
+            for (i in 0 until length()) {
+                val item = optJSONObject(i) ?: continue
+                add(
+                    ShotEvent(
+                        id = item.optString("id", UUID.randomUUID().toString()),
+                        shotSeriesId = item.optString("shot_series_id").takeIf { it.isNotBlank() },
+                        detectedAtMillis = item.optString("detected_at")
+                            .takeIf { it.isNotBlank() }
+                            ?.let {
+                                runCatching { Instant.parse(it).toEpochMilli() }.getOrDefault(0L)
+                            }
+                            ?: item.optLong("detectedAtMillis", 0L),
+                        confidence = item.optDouble("confidence", 0.0).toFloat(),
+                        peakDb = item.optDouble("peak_db", item.optDouble("peakDb", 0.0)).toFloat(),
+                        audioClipPath = item.optString("audio_clip_path").takeIf { it.isNotBlank() }
+                    )
+                )
+            }
         }
     }
 
@@ -534,5 +972,62 @@ class ShotCounterViewModel(application: Application) : AndroidViewModel(applicat
             rearmThresholdDb = rearm,
             minShotGapMs = gap
         )
+    }
+
+    private data class DisplaySettings(
+        val displayMinDb: Float,
+        val displayMaxDb: Float,
+        val barDecayMsPerDb: Float
+    )
+
+    private fun loadDisplaySettings(): DisplaySettings {
+        val min = prefs.getFloat(keyDisplayMinDb, 80f).coerceIn(0f, 179f)
+        val max = prefs.getFloat(keyDisplayMaxDb, 180f).coerceIn(1f, 180f)
+        val adjustedMin = min.coerceAtMost(max - 5f)
+        val adjustedMax = max.coerceAtLeast(adjustedMin + 5f)
+        val decay = prefs.getFloat(keyBarDecayMsPerDb, 100f).coerceIn(0f, 3000f)
+        return DisplaySettings(adjustedMin, adjustedMax, decay)
+    }
+
+    private fun loadSectionExpansion(): SectionExpansionSettings {
+        return SectionExpansionSettings(
+            isCounterExpanded = prefs.getBoolean(keyCounterExpanded, true),
+            isSoundLevelsExpanded = prefs.getBoolean(keySoundLevelsExpanded, true),
+            isCalibrationExpanded = prefs.getBoolean(keyCalibrationExpanded, false),
+            isShotSeriesExpanded = prefs.getBoolean(keyShotSeriesExpanded, true)
+        )
+    }
+
+    fun updateDisplayMinDb(value: Float) {
+        _uiState.update { state ->
+            val newMin = value.coerceIn(0f, state.displayMaxDb - 5f)
+            state.copy(displayMinDb = newMin)
+        }
+        persistDisplaySettingsFromState()
+    }
+
+    fun updateDisplayMaxDb(value: Float) {
+        _uiState.update { state ->
+            val newMax = value.coerceIn(state.displayMinDb + 5f, 180f)
+            state.copy(displayMaxDb = newMax)
+        }
+        persistDisplaySettingsFromState()
+    }
+
+    fun updateBarDecayMsPerDb(value: Float) {
+        val rounded = (value / 100f).roundToInt() * 100f
+        _uiState.update { state ->
+            state.copy(barDecayMsPerDb = rounded.coerceIn(0f, 3000f))
+        }
+        persistDisplaySettingsFromState()
+    }
+
+    private fun persistDisplaySettingsFromState() {
+        val state = _uiState.value
+        prefs.edit()
+            .putFloat(keyDisplayMinDb, state.displayMinDb)
+            .putFloat(keyDisplayMaxDb, state.displayMaxDb)
+            .putFloat(keyBarDecayMsPerDb, state.barDecayMsPerDb)
+            .apply()
     }
 }

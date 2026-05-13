@@ -95,3 +95,25 @@ Android project root: `app/`
 	- Lower Shot Threshold.
 	- Lower Rearm Threshold slightly.
 	- Re-run Calibration Test Mode with representative shots.
+
+## Changelog
+
+### Latest Session (May 13, 2026)
+
+#### Core Improvements
+- **Dynamic peak sensitivity:** Peak confirmation threshold now scales with display range (4% of y-axis span) instead of fixed 1.2 dB, eliminating false peak clusters during sound decay.
+- **Peak re-arm mechanism:** After confirming a peak, the detector enters "unarmed" state until the signal bottoms out and rises again by the drop-confirmation threshold, preventing repeated peaks on gentle descents.
+- **Decay rate unit swap:** Bar decay changed from dB/second to ms/dB (higher = slower decay), with slider increments of 100 ms, making sensitivity more intuitive.
+- **Calibration range expansion:** Shot Threshold (1–180 dB) and Rearm Threshold (0–179 dB) now allow lower values while maintaining 1 dB gap.
+
+#### UI/UX Polish
+- **Exit dialog layout:** Save and Discard buttons are now equal width, centered horizontally with 16 dp gap between them.
+- **Slider granularity:** Decay rate slider now uses discrete 100 ms steps (0–3000 ms/dB range).
+- **Label clarity:** Decay rate displays "Hold" at 0, or "{n} ms/dB" otherwise.
+
+#### Technical Details
+- Added `peakRearmed`, `peakMinAfterConfirm` tracking variables for re-arm state.
+- Renamed `barDecayDbPerSecond` → `barDecayMsPerDb` throughout (ViewModel, UI, prefs).
+- Updated decay formula: `decayAmount = elapsedMs / barDecayMsPerDb` (or 0 if disabled).
+- Removed display-range-dependent `maxDecay` clamping; decay rate now independent of display bounds.
+- LabeledSliderField now supports optional `steps` parameter for discrete slider increments.
