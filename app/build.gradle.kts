@@ -1,7 +1,14 @@
 plugins {
-    id("com.android.application") version "8.13.2"
-    id("org.jetbrains.kotlin.android") version "1.9.24"
-    id("com.google.devtools.ksp") version "1.9.24-1.0.20"
+    id("com.android.application") version "9.2.1"
+    id("org.jetbrains.kotlin.android") version "2.2.21"
+    id("com.google.devtools.ksp") version "2.2.21-2.0.5"
+    id("org.jetbrains.kotlin.plugin.compose") version "2.2.21"
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+    }
 }
 
 android {
@@ -12,8 +19,8 @@ android {
         applicationId = "com.james.shotcounterpoc"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "0.2.0"
+        versionCode = 4
+        versionName = "0.2.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -36,17 +43,9 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-
     buildFeatures {
         buildConfig = true
         compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
     }
 
     packaging {
@@ -71,7 +70,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.4")
 
-    val roomVersion = "2.6.1"
+    val roomVersion = "2.7.1"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")

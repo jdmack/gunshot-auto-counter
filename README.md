@@ -98,6 +98,15 @@ Android project root: `app/`
 
 ## Changelog
 
+### v0.2.1
+
+#### Bug Fixes
+- **Shot marker rendering:** Fixed red circle markers being hidden by overlapping gold peak markers. Markers now render in correct z-order (peaks first, then shots on top).
+
+#### Technical Improvements
+- **Room database:** Upgraded from 2.6.1 to 2.7.1 for full KSP2 compatibility, fixing build errors with AGP 9.
+- **Build system:** Cleaned up deprecated AGP options while maintaining KSP compatibility. Kotlin JVM target now properly configured with modern compilerOptions DSL.
+
 ### v0.2.0
 
 #### Core Improvements

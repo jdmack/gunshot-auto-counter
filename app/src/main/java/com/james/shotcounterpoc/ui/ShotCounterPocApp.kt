@@ -805,17 +805,54 @@ private fun ShotSeriesSection(
     onDeleteAll: () -> Unit,
     onDeleteOne: (String) -> Unit
 ) {
-    ExpandableSection(
-        title = "Shot Series",
-        expanded = expanded,
-        onExpandedChange = onExpandedChange
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, Color(0xFF9E9E9E).copy(alpha = 0.4f), RoundedCornerShape(8.dp))
     ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(if (expanded) RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp) else RoundedCornerShape(8.dp))
+                .background(Color(0xFF0B4F8A))
+                .clickable { onExpandedChange(!expanded) }
+                .padding(horizontal = 12.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                contentDescription = if (expanded) "Collapse" else "Expand",
+                tint = Color(0xFFF7FBFF)
+            )
+            Text(
+                text = "Shot Series",
+                modifier = Modifier.weight(1f),
+                fontWeight = FontWeight.Bold,
+                fontSize = 15.sp,
+                color = Color(0xFFF7FBFF),
+                textAlign = TextAlign.Center
+            )
+            Button(
+                onClick = onDeleteAll,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFB71C1C),
+                    contentColor = Color.White
+                ),
+                contentPadding = PaddingValues(4.dp),
+                shape = RoundedCornerShape(6.dp),
+                modifier = Modifier.size(32.dp)
+            ) {
+                Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete all series", modifier = Modifier.size(16.dp))
+            }
+        }
+
+        if (expanded) {
             ShotSeriesTable(
                 rows = rows,
                 onSelectOne = onSelectOne,
-                onDeleteAll = onDeleteAll,
                 onDeleteOne = onDeleteOne
             )
+        }
     }
 }
 
@@ -1148,55 +1185,13 @@ private fun DecibelSection(
 private fun ShotSeriesTable(
     rows: List<ShotSeries>,
     onSelectOne: (String) -> Unit,
-    onDeleteAll: () -> Unit,
     onDeleteOne: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, Color(0xFF9E9E9E).copy(alpha = 0.4f), RoundedCornerShape(8.dp))
             .padding(8.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(8.dp))
-                .background(Color(0xFF0B4F8A))
-                .padding(horizontal = 8.dp, vertical = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                "Shot Series Name",
-                modifier = Modifier.weight(1f),
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFFF7FBFF),
-                fontSize = 14.sp
-            )
-            Text(
-                "Count",
-                modifier = Modifier.padding(end = 4.dp),
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFFF7FBFF),
-                fontSize = 14.sp
-            )
-            Button(
-                onClick = onDeleteAll,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFB71C1C),
-                    contentColor = Color.White
-                ),
-                contentPadding = PaddingValues(0.dp),
-                shape = RoundedCornerShape(10.dp),
-                modifier = Modifier
-                    .size(42.dp)
-                    .padding(bottom = 4.dp)
-            ) {
-                Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete all series")
-            }
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
 
         Column(verticalArrangement = Arrangement.spacedBy(0.dp)) {
             rows.forEachIndexed { index, row ->
@@ -1240,7 +1235,6 @@ private fun ShotEventsTable(
         return
     }
 
-    val headerColor = if (isSystemInDarkTheme()) Color(0xFF17314E) else Color(0xFFDDEBFF)
     val rowAltColor = if (isSystemInDarkTheme()) Color(0xFF10253B) else Color(0xFFF5F9FF)
     val rowColor = if (isSystemInDarkTheme()) Color(0xFF152C45) else Color(0xFFEAF3FF)
 
@@ -1248,18 +1242,6 @@ private fun ShotEventsTable(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(0.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(headerColor)
-                .padding(horizontal = 8.dp, vertical = 6.dp)
-        ) {
-            TableCell(text = "detected_at", weight = 1.45f, bold = true)
-            TableCell(text = "confidence", weight = 0.95f, bold = true)
-            TableCell(text = "peak_db", weight = 0.7f, bold = true)
-            Spacer(modifier = Modifier.width(32.dp))
-        }
-
         shots.forEachIndexed { index, shot ->
             Row(
                 modifier = Modifier
@@ -1428,24 +1410,28 @@ private fun DbTrendGraph(
                             }
                             points.forEachIndexed { index, point ->
                                 val marker = markerSlice.getOrElse(index) { 0 }
-                                if ((marker and ShotCounterViewModel.GRAPH_MARKER_SHOT) != 0) {
-                                    drawLine(
-                                        color = shotMarkerColor,
-                                        start = Offset(point.x, (point.y - 10f).coerceAtLeast(0f)),
-                                        end = Offset(point.x, (point.y + 10f).coerceAtMost(height)),
-                                        strokeWidth = 3f,
-                                        cap = StrokeCap.Round
-                                    )
-                                }
-                                if ((marker and ShotCounterViewModel.GRAPH_MARKER_PEAK) != 0) {
+                                val sampleValue = samples.getOrElse(index) { minDb }
+                                if ((marker and ShotCounterViewModel.GRAPH_MARKER_PEAK) != 0 && sampleValue <= shotThresholdDb) {
                                     drawCircle(
                                         color = peakMarkerColor,
-                                        radius = 5f,
+                                        radius = 7f,
                                         center = point
                                     )
                                     drawCircle(
                                         color = Color.White,
-                                        radius = 2f,
+                                        radius = 2.8f,
+                                        center = point
+                                    )
+                                }
+                                if ((marker and ShotCounterViewModel.GRAPH_MARKER_SHOT) != 0) {
+                                    drawCircle(
+                                        color = shotMarkerColor,
+                                        radius = 6.5f,
+                                        center = point
+                                    )
+                                    drawCircle(
+                                        color = Color.White,
+                                        radius = 2.6f,
                                         center = point
                                     )
                                 }
@@ -1461,23 +1447,40 @@ private fun DbTrendGraph(
             Text("Now", fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f))
         }
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(14.dp)) {
-            LegendItem(color = peakMarkerColor, label = "Peak")
-            LegendItem(color = shotMarkerColor, label = "Shot")
-            LegendItem(color = shotThresholdColor, label = "Shot threshold")
-            LegendItem(color = rearmThresholdColor, label = "Rearm threshold")
+            LegendDotItem(color = peakMarkerColor, label = "Peak")
+            LegendDotItem(color = shotMarkerColor, label = "Shot")
+            LegendDashedLineItem(color = shotThresholdColor, label = "Shot threshold")
+            LegendDashedLineItem(color = rearmThresholdColor, label = "Rearm threshold")
         }
     }
 }
 
 @Composable
-private fun LegendItem(color: Color, label: String) {
+private fun LegendDotItem(color: Color, label: String) {
     Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
         Box(
             modifier = Modifier
-                .size(10.dp)
-                .clip(RoundedCornerShape(10.dp))
+                .size(12.dp)
+                .clip(RoundedCornerShape(12.dp))
                 .background(color)
         )
+        Text(label, fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f))
+    }
+}
+
+@Composable
+private fun LegendDashedLineItem(color: Color, label: String) {
+    Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+        Canvas(modifier = Modifier.size(width = 16.dp, height = 10.dp)) {
+            val y = size.height / 2f
+            drawLine(
+                color = color.copy(alpha = 0.9f),
+                start = Offset(0f, y),
+                end = Offset(size.width, y),
+                strokeWidth = 2.5f,
+                pathEffect = PathEffect.dashPathEffect(floatArrayOf(8f, 6f))
+            )
+        }
         Text(label, fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f))
     }
 }
