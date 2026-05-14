@@ -8,11 +8,66 @@ Shot Counter POC is an Android app for counting gunshots in real time using micr
 
 ## Screenshots
 
-<img src="assets/screenshots/screenshot_app.png" alt="Main app screen" width="200" />        <img src="assets/screenshots/screenshot_listening.png" alt="Listening state" width="200" />        <img src="assets/screenshots/screenshot_gunshot.png" alt="Gunshot detected flash" width="200" />
-
-<img src="assets/screenshots/screenshot_calibration.png" alt="Calibration panel" width="200" />        <img src="assets/screenshots/screenshot_testmode.png" alt="Test mode" width="200" />        <img src="assets/screenshots/screenshot_shotseries.png" alt="Shot series table" width="200" />
-
-<img src="assets/screenshots/screenshot_howto.png" alt="How-to dialog" width="200" />
+<table>
+  <tr>
+    <td align="center" width="220">
+      <img src="assets/screenshots/screenshot_app.png" alt="Main screen" width="200" /><br/>
+      <b>Main Screen</b><br/>
+      The home screen with all collapsible sections (Counter, Sound Levels, Calibration, Shot Series) and the LISTEN toggle button.
+    </td>
+    <td align="center" width="220">
+      <img src="assets/screenshots/screenshot_counter.png" alt="Counter section" width="200" /><br/>
+      <b>Counter</b><br/>
+      The Counter section open showing the shot count, +/- adjustment buttons, series name field, and Save/Discard buttons.
+    </td>
+    <td align="center" width="220">
+      <img src="assets/screenshots/screenshot_soundlevels.png" alt="Sound levels and calibration" width="200" /><br/>
+      <b>Sound Levels</b><br/>
+      The Sound Levels panel with live dB bar, dB trend graph with peak and shot markers, and calibration sliders below.
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="220">
+      <img src="assets/screenshots/screenshot_detection.png" alt="Active shot detection" width="200" /><br/>
+      <b>Active Detection</b><br/>
+      Live detection in action with 12 shots counted; the trend graph shows gold peak markers and red shot markers across recent history.
+    </td>
+    <td align="center" width="220">
+      <img src="assets/screenshots/screenshot_calibration.png" alt="Calibration panel" width="200" /><br/>
+      <b>Calibration</b><br/>
+      Calibration section with Shot Threshold, Rearm Threshold, and Min Shot Gap sliders for tuning detection to the range environment.
+    </td>
+    <td align="center" width="220">
+      <img src="assets/screenshots/screenshot_autocalibrate.png" alt="Test mode" width="200" /><br/>
+      <b>Test Mode</b><br/>
+      Test Mode active — fire 10–20 representative shots and the app will analyze peak history and suggest optimized threshold values.
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="220">
+      <img src="assets/screenshots/screenshot_shotseries.png" alt="Shot series list" width="200" /><br/>
+      <b>Shot Series</b><br/>
+      The Shot Series section listing saved series by timestamp with shot counts, per-row delete, and a Total Count footer.
+    </td>
+    <td align="center" width="220">
+      <img src="assets/screenshots/screenshot_shotevents.png" alt="Shot events dialog" width="200" /><br/>
+      <b>Shot Events</b><br/>
+      The Shot Events dialog for a saved series showing each detected shot's timestamp, confidence score, peak dB, and an audio clip play button.
+    </td>
+    <td align="center" width="220">
+      <img src="assets/screenshots/screenshot_settings.png" alt="Quick settings dialog" width="200" /><br/>
+      <b>Quick Settings</b><br/>
+      The Quick Settings dialog (gear icon) for adjusting the dB display range (min/max) and the bar decay rate.
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="220">
+      <img src="assets/screenshots/screenshot_help.png" alt="How to use dialog" width="200" /><br/>
+      <b>How to Use</b><br/>
+      The help dialog (? icon) with a quick-start guide and a summary of each calibration parameter's purpose.
+    </td>
+  </tr>
+</table>
 
 ## Project
 
