@@ -4,7 +4,7 @@
 
 # Shot Counter POC
 
-Shot Counter POC is an Android app for counting gunshots in real time using microphone input, with on-range calibration controls (thresholds and shot gap), test mode tuning, and persistent shot-series tracking.
+Shot Counter POC is an Android app for counting gunshots in real time using microphone input, with on-range calibration controls (thresholds and shot gap), auto-calibration tuning, and persistent shot-series tracking.
 
 ## Screenshots
 
@@ -38,9 +38,9 @@ Shot Counter POC is an Android app for counting gunshots in real time using micr
       Calibration section with Shot Threshold, Rearm Threshold, and Min Shot Gap sliders for tuning detection to the range environment.
     </td>
     <td align="center" width="220">
-      <img src="assets/screenshots/screenshot_autocalibrate.png" alt="Test mode" width="200" /><br/>
-      <b>Test Mode</b><br/>
-      Test Mode active — fire 10–20 representative shots and the app will analyze peak history and suggest optimized threshold values.
+      <img src="assets/screenshots/screenshot_autocalibrate.png" alt="Auto calibrate" width="200" /><br/>
+      <b>Auto Calibrate</b><br/>
+      Auto Calibrate active — fire representative shots and the app analyzes captured calibration events to suggest optimized threshold values.
     </td>
   </tr>
   <tr>
@@ -98,7 +98,7 @@ Android project root: `app/`
 - Fast-rise / slow-fall dB smoothing so quick peaks remain visible.
 - Temporary last-shot dB display when a shot-like sound is detected.
 - In-app calibration controls for shot threshold, rearm threshold, and minimum shot gap.
-- Calibration Test Mode that records peak history and suggests tuned values after enough samples.
+- Auto Calibrate mode that records calibration shot events and suggests tuned values after enough samples.
 - Save Series form with default name: Shot Series YYYY-MM-DD HH:MM (24-hour).
 - Series table with newest-first ordering, row delete, and delete-all confirmation.
 - Total Count footer summing all saved series counts.
@@ -114,10 +114,10 @@ Android project root: `app/`
 - Adjacent lane shots, suppressors, and environment require on-range threshold tuning.
 - Calibration values are persisted between app launches.
 
-## Calibration Test Mode
-1. Tap `Test Mode` in the calibration section.
-2. Fire 10-20 representative test shots.
-3. Review recent peak history and suggested values.
+## Auto Calibrate
+1. Tap `Auto Calibrate` in the calibration section.
+2. Fire at least 10 representative calibration shots.
+3. Review captured shot events and suggested values.
 4. Check suggestion confidence (High/Medium/Low) before applying.
 5. Tap `Apply Suggested` to update thresholds and shot gap.
 6. Tap `Clear Samples` to start a fresh test set.
@@ -139,7 +139,7 @@ Android project root: `app/`
 4. App does not detect shots:
 	- Ensure microphone permission is granted in Android settings.
 	- Confirm `Listen` is active.
-	- Use Calibration Test Mode and tune thresholds for your range environment.
+	- Use Auto Calibrate and tune thresholds for your range environment.
 
 5. Counts seem too high (false positives):
 	- Increase Shot Threshold.
@@ -149,9 +149,22 @@ Android project root: `app/`
 6. Counts seem too low (missed shots, suppressor use):
 	- Lower Shot Threshold.
 	- Lower Rearm Threshold slightly.
-	- Re-run Calibration Test Mode with representative shots.
+	- Re-run Auto Calibrate with representative shots.
 
 ## Changelog
+
+### v0.2.2
+
+#### Auto Calibration Workflow
+- **Auto-listen integration:** Starting Auto Calibrate now starts listening automatically; stopping Auto Calibrate stops listening as part of the same flow.
+- **Dedicated calibration series:** Calibration shots are captured as shot events (including clip recording) and are saved to a separate `Auto Calibration <date>` series.
+- **Background persistence:** Calibration data is saved automatically when calibration ends, including stop-listening and app-exit paths, without prompting.
+
+#### UI Updates
+- **Renamed flow:** `Test Mode` is now `Auto Calibrate`, and active status text is now `Auto Calibration in Progress`.
+- **Live calibration table:** Auto calibration now shows a shot events table (timestamp/confidence/peak dB/clip controls) instead of plain peak text output.
+- **Progress emphasis:** Added a bold `Test Shots: X / 10` indicator with a red-to-yellow-to-green progress color.
+- **Button shape polish:** Converted key action buttons to square rounded buttons for visual consistency.
 
 ### v0.2.1
 

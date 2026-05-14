@@ -102,6 +102,7 @@ import java.io.File
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import kotlin.math.roundToInt
 
 private val AppBlueLightScheme = lightColorScheme(
     primary = Color(0xFF1565C0),
@@ -478,20 +479,45 @@ fun ShotCounterPocApp(viewModel: ShotCounterViewModel = viewModel()) {
                         )
 
                         SettingsSectionHeader("Behavior")
-                        val decayValueText = if (uiState.barDecayMsPerDb <= 0f) "Hold" else "${uiState.barDecayMsPerDb.toInt()} ms/dB"
+                        val decaySliderPos = when {
+                            uiState.barDecayMsPerDb < 0f -> 21f
+                            uiState.barDecayMsPerDb <= 0f -> 0f
+                            else -> (uiState.barDecayMsPerDb / 25f).coerceIn(1f, 20f)
+                        }
+                        val decayValueText = when {
+                            uiState.barDecayMsPerDb < 0f -> "Hold"
+                            uiState.barDecayMsPerDb <= 0f -> "Instant"
+                            else -> "${uiState.barDecayMsPerDb.toInt()} ms/dB"
+                        }
                         LabeledSliderField(
                             label = "Bar decay rate",
                             valueText = decayValueText,
-                            value = uiState.barDecayMsPerDb,
-                            valueRange = 0f..3000f,
-                            steps = 29,
-                            onValueChange = viewModel::updateBarDecayMsPerDb
+                            value = decaySliderPos,
+                            valueRange = 0f..21f,
+                            steps = 20,
+                            onValueChange = { pos ->
+                                val actual = when {
+                                    pos <= 0f -> 0f
+                                    pos >= 21f -> -1f
+                                    else -> pos.roundToInt() * 25f
+                                }
+                                viewModel.updateBarDecayMsPerDb(actual)
+                            }
+                        )
+                        LabeledSliderField(
+                            label = "Fallback re-arm margin",
+                            valueText = "${uiState.fallbackRearmMarginDb.toInt()} dB",
+                            value = uiState.fallbackRearmMarginDb,
+                            valueRange = 1f..20f,
+                            steps = 18,
+                            onValueChange = viewModel::updateFallbackRearmMarginDb
                         )
                     }
                 },
                 confirmButton = {
                     Button(
                         onClick = { showQuickSettingsDialog = false },
+                        shape = RoundedCornerShape(8.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.primary,
                             contentColor = Color.White
@@ -531,6 +557,7 @@ fun ShotCounterPocApp(viewModel: ShotCounterViewModel = viewModel()) {
                                 showExitDialog = false
                                 (context as? Activity)?.finish()
                             },
+                            shape = RoundedCornerShape(8.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = MaterialTheme.colorScheme.primary,
                                 contentColor = Color.White
@@ -545,6 +572,7 @@ fun ShotCounterPocApp(viewModel: ShotCounterViewModel = viewModel()) {
                                 showExitDialog = false
                                 (context as? Activity)?.finish()
                             },
+                            shape = RoundedCornerShape(8.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color(0xFF546E7A),
                                 contentColor = Color.White
@@ -557,6 +585,7 @@ fun ShotCounterPocApp(viewModel: ShotCounterViewModel = viewModel()) {
                 dismissButton = {
                     Button(
                         onClick = { showExitDialog = false },
+                        shape = RoundedCornerShape(8.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.secondary,
                             contentColor = Color.White
@@ -585,6 +614,7 @@ fun ShotCounterPocApp(viewModel: ShotCounterViewModel = viewModel()) {
                         Button(
                             onClick = { launchShare(includeJson = true, includeClips = true) },
                             modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(8.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = MaterialTheme.colorScheme.primary,
                                 contentColor = Color.White
@@ -595,6 +625,7 @@ fun ShotCounterPocApp(viewModel: ShotCounterViewModel = viewModel()) {
                         Button(
                             onClick = { launchShare(includeJson = true, includeClips = false) },
                             modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(8.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = MaterialTheme.colorScheme.secondary,
                                 contentColor = Color.White
@@ -605,6 +636,7 @@ fun ShotCounterPocApp(viewModel: ShotCounterViewModel = viewModel()) {
                         Button(
                             onClick = { launchShare(includeJson = false, includeClips = true) },
                             modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(8.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color(0xFF1565C0),
                                 contentColor = Color.White
@@ -618,6 +650,7 @@ fun ShotCounterPocApp(viewModel: ShotCounterViewModel = viewModel()) {
                 dismissButton = {
                     Button(
                         onClick = { showExportDialog = false },
+                        shape = RoundedCornerShape(8.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.secondary,
                             contentColor = Color.White
@@ -660,12 +693,13 @@ fun ShotCounterPocApp(viewModel: ShotCounterViewModel = viewModel()) {
                 confirmButton = {
                     Button(
                         onClick = { showHelpDialog = false },
+                        shape = RoundedCornerShape(8.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.primary,
                             contentColor = Color.White
                         )
                     ) {
-                        Text("Got it")
+                        Text("Got It")
                     }
                 }
             )
@@ -687,6 +721,7 @@ fun ShotCounterPocApp(viewModel: ShotCounterViewModel = viewModel()) {
                             viewModel.deleteAllSeries()
                             showDeleteAllDialog = false
                         },
+                        shape = RoundedCornerShape(8.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB71C1C), contentColor = Color.White)
                     ) {
                         Text("Delete", fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
@@ -695,6 +730,7 @@ fun ShotCounterPocApp(viewModel: ShotCounterViewModel = viewModel()) {
                 dismissButton = {
                     Button(
                         onClick = { showDeleteAllDialog = false },
+                        shape = RoundedCornerShape(8.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.secondary,
                             contentColor = Color.White
@@ -744,6 +780,7 @@ fun ShotCounterPocApp(viewModel: ShotCounterViewModel = viewModel()) {
                     confirmButton = {
                         Button(
                             onClick = { selectedSeriesId = null },
+                            shape = RoundedCornerShape(8.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = MaterialTheme.colorScheme.primary,
                                 contentColor = Color.White
@@ -774,6 +811,7 @@ fun ShotCounterPocApp(viewModel: ShotCounterViewModel = viewModel()) {
                                 viewModel.deleteSeries(id)
                                 pendingDeleteId = null
                             },
+                            shape = RoundedCornerShape(8.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB71C1C), contentColor = Color.White)
                         ) {
                             Text("Delete", fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
@@ -782,6 +820,7 @@ fun ShotCounterPocApp(viewModel: ShotCounterViewModel = viewModel()) {
                     dismissButton = {
                         Button(
                             onClick = { pendingDeleteId = null },
+                            shape = RoundedCornerShape(8.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = MaterialTheme.colorScheme.secondary,
                                 contentColor = Color.White
@@ -890,12 +929,18 @@ private fun CalibrationSection(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Button(onClick = onResetDefaults) {
+                Button(
+                    onClick = onResetDefaults,
+                    shape = RoundedCornerShape(8.dp)
+                ) {
                     Text("Reset Cal", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
                 }
                 Spacer(modifier = Modifier.width(12.dp))
-                Button(onClick = onToggleTestMode) {
-                    Text(if (isCalibrationTestMode) "Stop Test" else "Test Mode", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                Button(
+                    onClick = onToggleTestMode,
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text(if (isCalibrationTestMode) "Stop Auto Calibrate" else "Auto Calibrate", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
                 }
             }
 
@@ -1088,6 +1133,7 @@ private fun CounterSection(
                 onClick = onSaveSeries,
                 enabled = hasPendingSeries,
                 modifier = Modifier.weight(1f),
+                shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = Color.White
@@ -1099,6 +1145,7 @@ private fun CounterSection(
                 onClick = onDiscardSeries,
                 enabled = hasPendingSeries,
                 modifier = Modifier.weight(1f),
+                shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFF546E7A),
                     contentColor = Color.White

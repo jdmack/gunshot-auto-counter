@@ -19,4 +19,5 @@
                 - Make sure the X / 10 is a thick bold font.
                 - For the first number X, have the color of it change on a gradiant between red and green based on how many shots have been fired. So start with 0 as red and then progressively go through orange, yellow, green, etc as the calibration shot number increases towards the goal. You originally said 10 to 20 shots, so maybe 10 should be yellow and 20 is green. Or 10 is dark green and the more shots, the brighter the green gets.
             -
-            
+- UI Changes
+    - Change all the round side circular buttons (like Save, Discard, Reset Cal, etc) into square buttons with rounded colors. All buttons including the dialogs.            

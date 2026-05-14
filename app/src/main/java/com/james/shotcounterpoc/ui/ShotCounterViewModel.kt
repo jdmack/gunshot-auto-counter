@@ -73,6 +73,7 @@ data class ShotCounterUiState(
     val displayMinDb: Float = 80f,
     val displayMaxDb: Float = 180f,
     val barDecayMsPerDb: Float = 100f,
+    val fallbackRearmMarginDb: Float = 3f,
     val isCounterExpanded: Boolean = true,
     val isSoundLevelsExpanded: Boolean = true,
     val isCalibrationExpanded: Boolean = false,
@@ -116,6 +117,8 @@ class ShotCounterViewModel(application: Application) : AndroidViewModel(applicat
     private val keyDisplayMinDb = "display_min_db"
     private val keyDisplayMaxDb = "display_max_db"
     private val keyBarDecayMsPerDb = "bar_decay_ms_per_db"
+    private val keyFallbackRearmMarginDb = "fallback_rearm_margin_db"
+    private val defaultFallbackRearmMarginDb = 3f
     private val keyCounterExpanded = "counter_expanded"
     private val keySoundLevelsExpanded = "sound_levels_expanded"
     private val keyCalibrationExpanded = "calibration_expanded"
@@ -133,6 +136,7 @@ class ShotCounterViewModel(application: Application) : AndroidViewModel(applicat
             displayMinDb = displaySettings.displayMinDb,
             displayMaxDb = displaySettings.displayMaxDb,
             barDecayMsPerDb = displaySettings.barDecayMsPerDb,
+            fallbackRearmMarginDb = displaySettings.fallbackRearmMarginDb,
             isCounterExpanded = sectionExpansion.isCounterExpanded,
             isSoundLevelsExpanded = sectionExpansion.isSoundLevelsExpanded,
             isCalibrationExpanded = sectionExpansion.isCalibrationExpanded,
@@ -609,9 +613,14 @@ class ShotCounterViewModel(application: Application) : AndroidViewModel(applicat
         val elapsedMs = if (lastDbUpdateEpochMs > 0L) (now - lastDbUpdateEpochMs).coerceAtLeast(0L) else 0L
         lastDbUpdateEpochMs = now
 
-        val decayAmount = if (thresholds.barDecayMsPerDb <= 0f) 0f else elapsedMs / thresholds.barDecayMsPerDb
+        val isHold = thresholds.barDecayMsPerDb < 0f
+        val decayAmount = if (thresholds.barDecayMsPerDb > 0f) elapsedMs / thresholds.barDecayMsPerDb else 0f
         val decayed = thresholds.displayedDb - decayAmount
-        val smoothed = if (db >= decayed) {
+        val smoothed = if (isHold) {
+            max(db, thresholds.displayedDb)
+        } else if (thresholds.barDecayMsPerDb <= 0f) {
+            db
+        } else if (db >= decayed) {
             db
         } else {
             max(db, decayed)
@@ -621,8 +630,13 @@ class ShotCounterViewModel(application: Application) : AndroidViewModel(applicat
 
         val confirmedPeak = updatePeakTracking(db, clampedSmoothed, sampleNumber)
 
-        if (!shotArmed && db < thresholds.rearmThresholdDb) {
-            shotArmed = true
+        if (!shotArmed) {
+            val droppedBelowRearm = db < thresholds.rearmThresholdDb
+            val droppedBelowShotByMargin = db < (thresholds.shotThresholdDb - thresholds.fallbackRearmMarginDb)
+            val gapElapsed = now - lastShotEpochMs >= thresholds.minShotGapMs.toLong()
+            if (droppedBelowRearm || (gapElapsed && droppedBelowShotByMargin)) {
+                shotArmed = true
+            }
         }
 
         var shotEvent: ShotEvent? = null
@@ -977,7 +991,8 @@ class ShotCounterViewModel(application: Application) : AndroidViewModel(applicat
     private data class DisplaySettings(
         val displayMinDb: Float,
         val displayMaxDb: Float,
-        val barDecayMsPerDb: Float
+        val barDecayMsPerDb: Float,
+        val fallbackRearmMarginDb: Float
     )
 
     private fun loadDisplaySettings(): DisplaySettings {
@@ -985,8 +1000,11 @@ class ShotCounterViewModel(application: Application) : AndroidViewModel(applicat
         val max = prefs.getFloat(keyDisplayMaxDb, 180f).coerceIn(1f, 180f)
         val adjustedMin = min.coerceAtMost(max - 5f)
         val adjustedMax = max.coerceAtLeast(adjustedMin + 5f)
-        val decay = prefs.getFloat(keyBarDecayMsPerDb, 100f).coerceIn(0f, 3000f)
-        return DisplaySettings(adjustedMin, adjustedMax, decay)
+        val decay = prefs.getFloat(keyBarDecayMsPerDb, 100f).let { v ->
+            if (v < 0f) -1f else ((v / 25f).roundToInt() * 25f).toFloat().coerceIn(0f, 500f)
+        }
+        val margin = prefs.getFloat(keyFallbackRearmMarginDb, defaultFallbackRearmMarginDb).coerceIn(1f, 20f)
+        return DisplaySettings(adjustedMin, adjustedMax, decay, margin)
     }
 
     private fun loadSectionExpansion(): SectionExpansionSettings {
@@ -1015,9 +1033,16 @@ class ShotCounterViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun updateBarDecayMsPerDb(value: Float) {
-        val rounded = (value / 100f).roundToInt() * 100f
+        val snapped = if (value < 0f) -1f else ((value / 25f).roundToInt() * 25f).toFloat().coerceIn(0f, 500f)
         _uiState.update { state ->
-            state.copy(barDecayMsPerDb = rounded.coerceIn(0f, 3000f))
+            state.copy(barDecayMsPerDb = snapped)
+        }
+        persistDisplaySettingsFromState()
+    }
+
+    fun updateFallbackRearmMarginDb(value: Float) {
+        _uiState.update { state ->
+            state.copy(fallbackRearmMarginDb = value.coerceIn(1f, 20f))
         }
         persistDisplaySettingsFromState()
     }
@@ -1028,6 +1053,7 @@ class ShotCounterViewModel(application: Application) : AndroidViewModel(applicat
             .putFloat(keyDisplayMinDb, state.displayMinDb)
             .putFloat(keyDisplayMaxDb, state.displayMaxDb)
             .putFloat(keyBarDecayMsPerDb, state.barDecayMsPerDb)
+            .putFloat(keyFallbackRearmMarginDb, state.fallbackRearmMarginDb)
             .apply()
     }
 }
